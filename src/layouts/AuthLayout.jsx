@@ -11,7 +11,7 @@ const AuthLayout = () => {
   const bannerTitle = "";
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-white overflow-x-hidden">
+    <div className="relative flex min-h-screen w-full flex-col bg-white overflow-x-hidden mb-20">
       <div className="flex flex-1 justify-center">
         <div className="flex flex-col w-full">
           {/* Header Image */}
