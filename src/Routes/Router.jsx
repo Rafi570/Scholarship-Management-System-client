@@ -6,6 +6,8 @@ import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
 import Forgot from "../Pages/Auth/Forgot";
 import DetailsUniverScholarship from "../Components/DetailsUniverScholarship/DetailsUniverScholarship";
+import Loading from "../Components/Loading/Loading";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +20,9 @@ export const router = createBrowserRouter([
       },
       {
         path: '/scholarship/:id',
-        Component: DetailsUniverScholarship,
+        element:<PrivateRoute><DetailsUniverScholarship></DetailsUniverScholarship></PrivateRoute>,
+        loader: ({params}) => fetch(`http://localhost:3000/scholarships/${params.id}`),
+        hydrateFallbackElement: <Loading></Loading>
         
       }
     ],
