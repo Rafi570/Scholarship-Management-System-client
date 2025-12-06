@@ -5,6 +5,7 @@ import AuthLayout from "../layouts/AuthLayout";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
 import Forgot from "../Pages/Auth/Forgot";
+import DetailsUniverScholarship from "../Components/DetailsUniverScholarship/DetailsUniverScholarship";
 
 export const router = createBrowserRouter([
   {
@@ -12,9 +13,14 @@ export const router = createBrowserRouter([
     Component: RootLayout,
     children: [
       {
-        index: true, // default child route
+        index: true, 
         Component: Home,
       },
+      {
+        path: '/scholarship/:id',
+        Component: DetailsUniverScholarship,
+        
+      }
     ],
   },
   {
