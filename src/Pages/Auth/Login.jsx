@@ -109,7 +109,7 @@ const Login = () => {
             <p className="text-gray-900 text-base font-medium">Password</p>
             <Link
               className="text-primary text-sm underline hover:text-primary/80"
-              to="#"
+              to="/auth/forgot-pass"
             >
               Forgot Password?
             </Link>

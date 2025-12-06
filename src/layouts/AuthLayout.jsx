@@ -14,7 +14,6 @@ const AuthLayout = () => {
     <div className="relative flex min-h-screen w-full flex-col bg-white overflow-x-hidden mb-20">
       <div className="flex flex-1 justify-center">
         <div className="flex flex-col w-full">
-          {/* Header Image */}
           <div className="w-full">
             <div
               className="bg-cover bg-center flex flex-col justify-end min-h-[350px]"
@@ -25,7 +24,6 @@ const AuthLayout = () => {
                   url("${bannerImageUrl}")
                 `,
                 backgroundPosition: "center 27%", 
-                // ↑ image নিচে নামানো হয়েছে (20% মানে একটু নিচে push করা)
               }}
             >
               <div className="flex p-8 md:p-12">
