@@ -4,6 +4,8 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
+const PRIMARY_COLOR = "#35AC86";
+
 const MyReview = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -20,7 +22,6 @@ const MyReview = () => {
     },
   });
 
-  // Open modal for edit
   const handleEdit = (review) => {
     setCurrentReview(review);
     setUpdatedText(review.reviewText);
@@ -28,10 +29,9 @@ const MyReview = () => {
     setModalOpen(true);
   };
 
-  // Submit updated review
   const handleUpdate = async () => {
     try {
-      await axiosSecure.put(`/review/${currentReview._id}`, {
+      await axiosSecure.patch(`/review/${currentReview._id}`, {
         reviewText: updatedText,
         rating: updatedRating,
       });
@@ -44,15 +44,14 @@ const MyReview = () => {
     }
   };
 
-  // Delete review
   const handleDelete = (reviewId) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
+      confirmButtonColor: PRIMARY_COLOR,
+      cancelButtonColor: "#6c757d",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -69,48 +68,54 @@ const MyReview = () => {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">My Reviews</h2>
+    <div className="p-6 max-w-7xl mx-auto">
+      <h2
+        className="text-2xl font-bold mb-6"
+        style={{ color: PRIMARY_COLOR }}
+      >
+        My Reviews
+      </h2>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border border-gray-200">
-          <thead className="bg-gray-100">
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table className="min-w-full table-auto">
+          <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-2 border">Scholarship Name</th>
-              <th className="px-4 py-2 border">University Name</th>
-              <th className="px-4 py-2 border">Review Comment</th>
-              <th className="px-4 py-2 border">Review Date</th>
-              <th className="px-4 py-2 border">Rating</th>
-              <th className="px-4 py-2 border">Actions</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">#</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">Scholarship Name</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">University Name</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">Review Comment</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">Review Date</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">Rating</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
             {reviews.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-4">
-                  No reviews found.
+                <td colSpan="7" className="text-center py-10 text-gray-400 text-lg">
+                  You haven't written any reviews yet.
                 </td>
               </tr>
             ) : (
-              reviews.map((review) => (
-                <tr key={review._id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border">{review.scholarshipName}</td>
-                  <td className="px-4 py-2 border">{review.universityName}</td>
-                  <td className="px-4 py-2 border">{review.reviewText}</td>
-                  <td className="px-4 py-2 border">
-                    {new Date(review.postedAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-2 border">{review.rating}</td>
-                  <td className="px-4 py-2 border flex gap-2">
+              reviews.map((review, index) => (
+                <tr key={review._id} className="hover:bg-gray-50 transition duration-150">
+                  <td className="px-6 py-4 text-gray-800">{index + 1}</td>
+                  <td className="px-6 py-4 text-gray-800">{review.scholarshipName}</td>
+                  <td className="px-6 py-4 text-gray-800">{review.universityName}</td>
+                  <td className="px-6 py-4 text-gray-800">{review.reviewText}</td>
+                  <td className="px-6 py-4 text-gray-800">{new Date(review.postedAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-gray-800">{review.rating}</td>
+                  <td className="px-6 py-4 flex gap-2">
                     <button
                       onClick={() => handleEdit(review)}
-                      className="px-2 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                      className="px-3 py-1 text-sm rounded shadow text-white transition transform hover:scale-105"
+                      style={{ backgroundColor: PRIMARY_COLOR }}
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(review._id)}
-                      className="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
+                      className="px-3 py-1 text-sm rounded shadow text-white bg-red-500 hover:bg-red-600 transition transform hover:scale-105"
                     >
                       Delete
                     </button>
@@ -122,13 +127,16 @@ const MyReview = () => {
         </table>
       </div>
 
-      {/* Edit Modal */}
+      {/* Modern Animated Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-            <h3 className="text-lg font-semibold mb-4">Edit Review</h3>
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl animate-fade-in transform transition-all scale-95 duration-300 ease-out">
+            <h3 className="text-xl font-bold mb-4" style={{ color: PRIMARY_COLOR }}>
+              Edit Your Review
+            </h3>
             <textarea
-              className="w-full border p-2 rounded mb-3"
+              className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none transition"
+              rows={4}
               value={updatedText}
               onChange={(e) => setUpdatedText(e.target.value)}
             />
@@ -136,20 +144,21 @@ const MyReview = () => {
               type="number"
               min="1"
               max="5"
-              className="w-full border p-2 rounded mb-3"
+              className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
               value={updatedRating}
               onChange={(e) => setUpdatedRating(Number(e.target.value))}
             />
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
+                className="px-5 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition transform hover:scale-105"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdate}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                className="px-5 py-2 rounded-lg text-white transition transform hover:scale-105"
+                style={{ backgroundColor: PRIMARY_COLOR }}
               >
                 Update
               </button>
