@@ -6,12 +6,14 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Loading from "../Loading/Loading";
 import { motion } from "framer-motion";
 import SingleTopUniversity from "../singleTopUniversity/singleTopUniversity";
+import useAuth from "../../hooks/useAuth";
 
 const TopSixUniversity = () => {
   const axiosSecure = useAxiosSecure();
-
+  const {loading}=useAuth()
   const { data: scholarships = [], isLoading } = useQuery({
     queryKey: ["top-cheapest"],
+    enabled: !loading,
     queryFn: async () => {
       const res = await axiosSecure.get("/scholarships/cheapest");
       return res.data;
