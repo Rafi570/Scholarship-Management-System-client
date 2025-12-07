@@ -66,11 +66,7 @@ const NavBar = () => {
                 tabIndex={0}
                 className="dropdown-content menu p-3 shadow-lg bg-white/95 rounded-xl w-48 border border-gray-100"
               >
-                <li>
-                  <Link to="/profile" className="hover:text-primary">
-                    Profile
-                  </Link>
-                </li>
+
                 {user && (
                   <>
                     <li>
@@ -164,12 +160,7 @@ const NavBar = () => {
 
           {user ? (
             <>
-              <Link
-                to="/profile"
-                className="py-3 rounded-lg text-gray-700 font-medium hover:bg-primary/10 hover:text-primary transition"
-              >
-                Profile
-              </Link>
+
 
               <button
                 onClick={handleLogout}

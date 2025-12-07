@@ -129,14 +129,24 @@ const DashboardLayout = () => {
               </Link>
             </li>
             {role === "admin" && (
-              <li>
-                <Link
-                  to="/dashboard/manage-users"
-                  className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
-                >
-                  Manage Users
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link
+                    to="/dashboard/manage-users"
+                    className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
+                  >
+                    Manage Users
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard/add-scholarship"
+                    className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
+                  >
+                    Add ScholarShip
+                  </Link>
+                </li>
+              </>
             )}
             <li>
               <Link

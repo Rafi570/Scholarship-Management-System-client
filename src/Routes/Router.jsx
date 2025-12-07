@@ -11,6 +11,9 @@ import PrivateRoute from "./PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardHome from "../Pages/Dashboard/DashboardHome/DashboardHome";
 import MyReview from "../Pages/Dashboard/MyReview";
+import AllScholarShip from "../Pages/AllScholarShip/AllScholarShip";
+import Profile from "../Pages/Profile/Profile";
+import AddScholarShip from "../Pages/Dashboard/AddScholarShip/AddScholarShip";
 
 export const router = createBrowserRouter([
   // RootRelated
@@ -33,6 +36,10 @@ export const router = createBrowserRouter([
           fetch(`http://localhost:3000/scholarships/${params.id}`),
         hydrateFallbackElement: <Loading></Loading>,
       },
+      {
+        path:'/scholarships',
+        Component: AllScholarShip
+      }
     ],
   },
   // auth related
@@ -71,6 +78,14 @@ export const router = createBrowserRouter([
       {
         path:'my-review',
         Component:MyReview
+      },
+      {
+        path:'profile',
+        Component:Profile
+      },
+      {
+        path: "add-scholarship",
+        Component:AddScholarShip
       }
 
     ]

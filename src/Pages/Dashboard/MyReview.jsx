@@ -70,10 +70,10 @@ const MyReview = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <h2
-        className="text-2xl font-bold mb-6"
-        style={{ color: PRIMARY_COLOR }}
+        className="text-2xl font-bold mb-6 text-center"
+        
       >
-        My Reviews
+        My  <span style={{ color: PRIMARY_COLOR }} >Reviews</span>
       </h2>
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
