@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -35,7 +36,7 @@ const Login = () => {
       await signInUser(email, password);
       toast.success("Login successful!");
       setFormData({ email: "", password: "" });
-      navigate("/"); // Redirect after login
+      navigate(location.state || "/"); // Redirect after login
     } catch (error) {
       console.error(error);
       toast.error("Login failed! Check your credentials.");
@@ -64,7 +65,7 @@ const Login = () => {
         toast.success("Login successful via Google!");
       }
 
-      navigate("/"); // Redirect after login
+      navigate(location.state || "/");
     } catch (error) {
       console.error(error);
       toast.error("Google Sign-In failed!");

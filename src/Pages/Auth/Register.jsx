@@ -58,7 +58,13 @@ const Register = () => {
       await updateUserProfile({ displayName: name, photoURL });
 
       // Save user to DB
-      const newUser = { name, email, photoURL, role: "student", createdAt: new Date() };
+      const newUser = {
+        name,
+        email,
+        photoURL,
+        role: "student",
+        createdAt: new Date(),
+      };
       const response = await axiosSecure.post("/users", newUser);
 
       if (response.data.message === "user exists") {
@@ -67,7 +73,7 @@ const Register = () => {
         toast.success("Registration successful!");
         setFormData({ name: "", email: "", photoURL: "", password: "" });
         // navigate("/");
-        navigate(location.state || '/');
+        navigate(location.state || "/");
       }
     } catch (error) {
       console.error(error);
@@ -98,7 +104,7 @@ const Register = () => {
         toast.success("Registration successful via Google!");
       }
 
-      navigate("/"); // Redirect after success
+      navigate(location.state || "/"); // Redirect after success
     } catch (error) {
       console.error(error);
       toast.error("Google Sign-In failed!");

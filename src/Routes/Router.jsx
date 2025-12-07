@@ -8,25 +8,34 @@ import Forgot from "../Pages/Auth/Forgot";
 import DetailsUniverScholarship from "../Components/DetailsUniverScholarship/DetailsUniverScholarship";
 import Loading from "../Components/Loading/Loading";
 import PrivateRoute from "./PrivateRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardHome from "../Pages/Dashboard/DashboardHome/DashboardHome";
+import MyReview from "../Pages/Dashboard/MyReview";
 
 export const router = createBrowserRouter([
+  // RootRelated
   {
     path: "/",
     Component: RootLayout,
     children: [
       {
-        index: true, 
+        index: true,
         Component: Home,
       },
       {
-        path: '/scholarship/:id',
-        element:<PrivateRoute><DetailsUniverScholarship></DetailsUniverScholarship></PrivateRoute>,
-        loader: ({params}) => fetch(`http://localhost:3000/scholarships/${params.id}`),
-        hydrateFallbackElement: <Loading></Loading>
-        
-      }
+        path: "/scholarship/:id",
+        element: (
+          <PrivateRoute>
+            <DetailsUniverScholarship></DetailsUniverScholarship>
+          </PrivateRoute>
+        ),
+        loader: ({ params }) =>
+          fetch(`http://localhost:3000/scholarships/${params.id}`),
+        hydrateFallbackElement: <Loading></Loading>,
+      },
     ],
   },
+  // auth related
   {
     path: "/",
     Component: AuthLayout,
@@ -44,5 +53,26 @@ export const router = createBrowserRouter([
         Component: Forgot,
       },
     ],
+  },
+
+  // dashboard
+  {
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+    children:[
+      {
+        index: true,
+        Component: DashboardHome
+      },
+      {
+        path:'my-review',
+        Component:MyReview
+      }
+
+    ]
   },
 ]);

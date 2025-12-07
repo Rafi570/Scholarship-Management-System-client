@@ -51,7 +51,11 @@ const NavBar = () => {
                 >
                   <div className="w-10 rounded-full ring-2 ring-primary/40">
                     <img
-                      src={user.photoURL || user.photo || "https://via.placeholder.com/40"}
+                      src={
+                        user.photoURL ||
+                        user.photo ||
+                        "https://via.placeholder.com/40"
+                      }
                       alt="User avatar"
                     />
                   </div>
@@ -67,11 +71,17 @@ const NavBar = () => {
                     Profile
                   </Link>
                 </li>
+                {user && (
+                  <>
+                    <li>
+                      <Link to="/dashboard" className="hover:text-primary">
+                        Dashboard
+                      </Link>
+                    </li>
+                  </>
+                )}
                 <li>
-                  <button
-                    className="hover:text-red-600"
-                    onClick={handleLogout}
-                  >
+                  <button className="hover:text-red-600" onClick={handleLogout}>
                     Logout
                   </button>
                 </li>
