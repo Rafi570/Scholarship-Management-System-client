@@ -10,6 +10,8 @@ const ManageScholarShip = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentScholarship, setCurrentScholarship] = useState(null);
   const [formData, setFormData] = useState({});
+  const [uploading, setUploading] = useState(false);
+  const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
 
   // ================================
   // 🔥 Fetch Scholarships
@@ -38,7 +40,6 @@ const ManageScholarShip = () => {
     try {
       const { _id, ...rest } = formData;
 
-      // Convert date fields to proper format
       const cleanedData = {
         ...rest,
         ...(formData.applicationDeadline
@@ -85,53 +86,70 @@ const ManageScholarShip = () => {
     }
   };
 
+  // ================================
+  // 📷 Image Upload
+  // ================================
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const form = new FormData();
+    form.append("image", file);
+
+    try {
+      setUploading(true);
+      const res = await fetch(image_API_URL, {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setFormData((prev) => ({
+          ...prev,
+          universityImage: data.data.url,
+        }));
+        Swal.fire("Success!", "Image uploaded successfully!", "success");
+      } else {
+        Swal.fire("Error!", "Image upload failed!", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error!", "Image upload failed!", "error");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">
         Manage <span style={{ color: PRIMARY_COLOR }}>Scholarships</span>
       </h2>
 
-      {/* ========================= Table: small data only ========================= */}
+      {/* ========================= Table ========================= */}
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="min-w-full table-auto">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                #
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                Scholarship
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                University
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                Country
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                City
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                Actions
-              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">#</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">Scholarship</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">University</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">Country</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">City</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">Actions</th>
             </tr>
           </thead>
           <tbody>
             {scholarships.length === 0 ? (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-center py-10 text-gray-400 text-lg"
-                >
+                <td colSpan="6" className="text-center py-10 text-gray-400 text-lg">
                   No scholarships added yet.
                 </td>
               </tr>
             ) : (
               scholarships.map((sch, index) => (
-                <tr
-                  key={sch._id}
-                  className="hover:bg-gray-50 transition duration-150"
-                >
+                <tr key={sch._id} className="hover:bg-gray-50 transition duration-150">
                   <td className="px-4 py-2">{index + 1}</td>
                   <td className="px-4 py-2">{sch.scholarshipName}</td>
                   <td className="px-4 py-2">{sch.universityName}</td>
@@ -159,14 +177,11 @@ const ManageScholarShip = () => {
         </table>
       </div>
 
-      {/* ========================= Modal: full data ========================= */}
+      {/* ========================= Modal ========================= */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-3xl shadow-2xl overflow-y-auto max-h-[90vh] animate-fade-in">
-            <h3
-              className="text-xl font-bold mb-4 text-center"
-              style={{ color: PRIMARY_COLOR }}
-            >
+            <h3 className="text-xl font-bold mb-4 text-center" style={{ color: PRIMARY_COLOR }}>
               Edit Scholarship
             </h3>
 
@@ -211,16 +226,23 @@ const ManageScholarShip = () => {
                 </div>
               ))}
 
+              {/* Image Upload */}
               <div className="flex flex-col md:col-span-2">
-                <label className="text-gray-600 mb-1">University Image URL</label>
+                <label className="text-gray-600 mb-1">University Image</label>
                 <input
-                  type="text"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
                   className="border p-2 rounded"
-                  value={formData.universityImage || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, universityImage: e.target.value })
-                  }
                 />
+                {uploading && <span className="text-sm text-gray-500 mt-1">Uploading...</span>}
+                {formData.universityImage && (
+                  <img
+                    src={formData.universityImage}
+                    alt="University"
+                    className="mt-2 h-20 w-auto rounded shadow"
+                  />
+                )}
               </div>
             </div>
 

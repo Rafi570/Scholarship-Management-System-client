@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 const AddScholarShip = () => {
   const { user } = useAuth();
   const axios = useAxios();
+  const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
 
   const [formData, setFormData] = useState({
     scholarshipName: "",
@@ -23,15 +24,50 @@ const AddScholarShip = () => {
     applicationDeadline: "",
   });
 
+  const [uploading, setUploading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData({
       ...formData,
       [name]: value,
     });
   };
 
+  // ========================= Upload Image =========================
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formDataImg = new FormData();
+    formDataImg.append("image", file);
+
+    try {
+      setUploading(true);
+      const res = await fetch(image_API_URL, {
+        method: "POST",
+        body: formDataImg,
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setFormData((prev) => ({
+          ...prev,
+          universityImage: data.data.url,
+        }));
+        Swal.fire("Success!", "Image uploaded successfully!", "success");
+      } else {
+        Swal.fire("Error!", "Image upload failed!", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error!", "Image upload failed!", "error");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // ========================= Submit Form =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,6 +87,7 @@ const AddScholarShip = () => {
       if (res.data.insertedId) {
         Swal.fire("Success!", "Scholarship Added Successfully!", "success");
         e.target.reset();
+        setFormData((prev) => ({ ...prev, universityImage: "" }));
       }
     } catch (err) {
       Swal.fire("Error!", "Something went wrong!", "error");
@@ -68,9 +105,7 @@ const AddScholarShip = () => {
         onSubmit={handleSubmit}
         className="bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-gray-200 space-y-5"
       >
-        {/* 2-column grid */}
         <div className="grid md:grid-cols-2 gap-4">
-
           <input
             required
             name="scholarshipName"
@@ -79,7 +114,6 @@ const AddScholarShip = () => {
             className="input-field"
             onChange={handleChange}
           />
-
           <input
             required
             name="universityName"
@@ -89,14 +123,24 @@ const AddScholarShip = () => {
             onChange={handleChange}
           />
 
-          <input
-            required
-            name="universityImage"
-            type="text"
-            placeholder="University Image URL"
-            className="input-field"
-            onChange={handleChange}
-          />
+          {/* Image Upload */}
+          <div className="flex flex-col">
+            <label className="mb-1 text-gray-600">University Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="border p-2 rounded"
+            />
+            {uploading && <span className="text-sm text-gray-500 mt-1">Uploading...</span>}
+            {formData.universityImage && (
+              <img
+                src={formData.universityImage}
+                alt="University"
+                className="mt-2 h-20 w-auto rounded shadow"
+              />
+            )}
+          </div>
 
           <input
             required
@@ -106,7 +150,6 @@ const AddScholarShip = () => {
             className="input-field"
             onChange={handleChange}
           />
-
           <input
             required
             name="universityCity"
@@ -115,7 +158,6 @@ const AddScholarShip = () => {
             className="input-field"
             onChange={handleChange}
           />
-
           <input
             name="universityWorldRank"
             type="number"
@@ -123,7 +165,6 @@ const AddScholarShip = () => {
             className="input-field"
             onChange={handleChange}
           />
-
           <select
             required
             name="subjectCategory"
@@ -137,7 +178,6 @@ const AddScholarShip = () => {
             <option value="Medical">Medical</option>
             <option value="Humanities">Humanities</option>
           </select>
-
           <select
             required
             name="scholarshipCategory"
@@ -148,7 +188,6 @@ const AddScholarShip = () => {
             <option value="Full fund">Full Fund</option>
             <option value="Partial fund">Partial Fund</option>
           </select>
-
           <select
             required
             name="degree"
@@ -161,7 +200,6 @@ const AddScholarShip = () => {
             <option value="PhD">PhD</option>
             <option value="Bachelor, Masters, PhD">Bachelor, Masters, PhD</option>
           </select>
-
           <input
             name="tuitionFees"
             type="number"
@@ -169,7 +207,6 @@ const AddScholarShip = () => {
             className="input-field"
             onChange={handleChange}
           />
-
           <input
             name="applicationFees"
             type="number"
@@ -177,7 +214,6 @@ const AddScholarShip = () => {
             className="input-field"
             onChange={handleChange}
           />
-
           <input
             name="serviceCharge"
             type="number"
@@ -185,7 +221,6 @@ const AddScholarShip = () => {
             className="input-field"
             onChange={handleChange}
           />
-
           <input
             required
             name="applicationDeadline"
