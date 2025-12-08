@@ -155,7 +155,6 @@ const DashboardLayout = () => {
                     Manage Scholarship
                   </Link>
                 </li>
-
               </>
             )}
             <li>
@@ -164,6 +163,14 @@ const DashboardLayout = () => {
                 className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
               >
                 Profile
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/dashboard/my-applicatioin"
+                className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
+              >
+                My Application
               </Link>
             </li>
           </ul>

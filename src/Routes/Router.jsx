@@ -16,6 +16,7 @@ import Profile from "../Pages/Profile/Profile";
 import AddScholarShip from "../Pages/Dashboard/AddScholarShip/AddScholarShip";
 import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
 import ManageScholarShip from "../Pages/Dashboard/ManageScholarShip/ManageScholarShip";
+import MyApplication from "../Pages/Dashboard/MyApplication/MyApplication";
 
 export const router = createBrowserRouter([
   // RootRelated
@@ -39,9 +40,9 @@ export const router = createBrowserRouter([
         hydrateFallbackElement: <Loading></Loading>,
       },
       {
-        path:'/scholarships',
-        Component: AllScholarShip
-      }
+        path: "/scholarships",
+        Component: AllScholarShip,
+      },
     ],
   },
   // auth related
@@ -72,32 +73,35 @@ export const router = createBrowserRouter([
         <DashboardLayout></DashboardLayout>
       </PrivateRoute>
     ),
-    children:[
+    children: [
       {
         index: true,
-        Component: DashboardHome
+        Component: DashboardHome,
       },
       {
-        path:'my-review',
-        Component:MyReview
+        path: "my-review",
+        Component: MyReview,
       },
       {
-        path:'profile',
-        Component:Profile
+        path: "profile",
+        Component: Profile,
       },
       {
         path: "add-scholarship",
-        Component:AddScholarShip
+        Component: AddScholarShip,
       },
       {
-        path:'manage-users',
-        Component:ManageUsers
+        path: "manage-users",
+        Component: ManageUsers,
       },
-            {
-        path:'manage-scholarship',
-        Component:ManageScholarShip
-      }
-
-    ]
+      {
+        path: "manage-scholarship",
+        Component: ManageScholarShip,
+      },
+      {
+        path: 'my-applicatioin',
+        Component:MyApplication
+      },
+    ],
   },
 ]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../Loading/Loading";
@@ -10,6 +10,7 @@ const DetailsUniverScholarship = () => {
   const { _id } = useLoaderData();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+   const navigate = useNavigate();
 
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
@@ -31,8 +32,42 @@ const DetailsUniverScholarship = () => {
     },
   });
 
-  const handleApply = () => {
-    toast.success("Application feature coming soon!");
+  const handleApply = async () => {
+    if (!user) return toast.error("Please login to apply");
+
+    if (!scholarship || !scholarship._id) {
+      return toast.error("Scholarship not found");
+    }
+
+    const applicationData = {
+      scholarshipId: scholarship._id,
+      userId: user.uid,
+      userName: user.displayName,
+      userEmail: user.email,
+      universityName: scholarship.universityName,
+      scholarshipName: scholarship.scholarshipName,
+      scholarshipCategory: scholarship.scholarshipCategory || "",
+      degree: scholarship.degree || "",
+      applicationFees: Number(scholarship.applicationFees) || 0,
+      serviceCharge: Number(scholarship.serviceCharge) || 0,
+      applicationStatus: "pending", // default
+      paymentStatus: "unpaid", // default
+      applicationDate: new Date(),
+      feedback: "", // empty initially
+    };
+
+    try {
+      const res = await axiosSecure.post("/application", applicationData);
+      if (res.data.success) {
+        toast.success("Application submitted successfully 🎉");
+        navigate('/dashboard/my-applicatioin')
+      } else {
+        toast.error(res.data.message || "Failed to submit application");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Server error! Failed to submit application.");
+    }
   };
 
   const handlePostReview = async (e) => {
@@ -65,7 +100,12 @@ const DetailsUniverScholarship = () => {
   const StarRating = ({ rating }) => (
     <div className="flex items-center gap-1">
       {[1, 2, 3, 4, 5].map((star) => (
-        <span key={star} className={`text-lg ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}>
+        <span
+          key={star}
+          className={`text-lg ${
+            star <= rating ? "text-yellow-400" : "text-gray-300"
+          }`}
+        >
           ★
         </span>
       ))}
@@ -102,7 +142,8 @@ const DetailsUniverScholarship = () => {
   if (isLoading) return <Loading />;
 
   const isApplicationOpen =
-    scholarship.applicationDeadline && new Date(scholarship.applicationDeadline) >= new Date();
+    scholarship.applicationDeadline &&
+    new Date(scholarship.applicationDeadline) >= new Date();
 
   return (
     <div className="min-h-screen bg-white/70 backdrop-blur-md py-10 px-4">
@@ -148,7 +189,9 @@ const DetailsUniverScholarship = () => {
                   <div className="flex justify-between py-3 border-b">
                     <span className="font-medium">Deadline</span>
                     <span className="font-bold text-red-600">
-                      {new Date(scholarship.applicationDeadline).toLocaleDateString("en-US", {
+                      {new Date(
+                        scholarship.applicationDeadline
+                      ).toLocaleDateString("en-US", {
                         day: "numeric",
                         month: "long",
                         year: "numeric",
@@ -169,10 +212,14 @@ const DetailsUniverScholarship = () => {
                       : "bg-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  {isApplicationOpen ? "Apply for Scholarship" : "Deadline Passed"}
+                  {isApplicationOpen
+                    ? "Apply for Scholarship"
+                    : "Deadline Passed"}
                 </button>
                 {isApplicationOpen && (
-                  <p className="text-gray-700 font-medium text-sm">Time left: {timeLeft}</p>
+                  <p className="text-gray-700 font-medium text-sm">
+                    Time left: {timeLeft}
+                  </p>
                 )}
               </div>
             </div>
@@ -181,7 +228,9 @@ const DetailsUniverScholarship = () => {
 
         {/* Reviews */}
         <div className="bg-white/90 rounded-3xl shadow-xl p-6 lg:p-12 border border-gray-200">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">Student Reviews</h2>
+          <h2 className="text-3xl font-bold text-gray-800 mb-6">
+            Student Reviews
+          </h2>
 
           {/* POST REVIEW */}
           {user ? (
@@ -193,7 +242,9 @@ const DetailsUniverScholarship = () => {
                   className="w-14 h-14 rounded-full shadow"
                 />
                 <div>
-                  <p className="font-semibold text-gray-800">{user.displayName}</p>
+                  <p className="font-semibold text-gray-800">
+                    {user.displayName}
+                  </p>
                   <p className="text-sm text-gray-500">{user.email}</p>
                 </div>
               </div>
@@ -236,7 +287,9 @@ const DetailsUniverScholarship = () => {
             </div>
           ) : (
             <div className="text-center py-8 bg-gray-50 rounded-2xl mb-8">
-              <p className="text-lg text-gray-600">Please log in to write a review</p>
+              <p className="text-lg text-gray-600">
+                Please log in to write a review
+              </p>
             </div>
           )}
 
