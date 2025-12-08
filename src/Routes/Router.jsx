@@ -15,6 +15,7 @@ import AllScholarShip from "../Pages/AllScholarShip/AllScholarShip";
 import Profile from "../Pages/Profile/Profile";
 import AddScholarShip from "../Pages/Dashboard/AddScholarShip/AddScholarShip";
 import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
+import ManageScholarShip from "../Pages/Dashboard/ManageScholarShip/ManageScholarShip";
 
 export const router = createBrowserRouter([
   // RootRelated
@@ -91,6 +92,10 @@ export const router = createBrowserRouter([
       {
         path:'manage-users',
         Component:ManageUsers
+      },
+            {
+        path:'manage-scholarship',
+        Component:ManageScholarShip
       }
 
     ]

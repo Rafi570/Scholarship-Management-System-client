@@ -146,6 +146,16 @@ const DashboardLayout = () => {
                     Add ScholarShip
                   </Link>
                 </li>
+
+                <li>
+                  <Link
+                    to="/dashboard/manage-scholarship"
+                    className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
+                  >
+                    Manage Scholarship
+                  </Link>
+                </li>
+
               </>
             )}
             <li>
