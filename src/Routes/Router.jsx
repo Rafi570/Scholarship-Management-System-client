@@ -20,6 +20,7 @@ import MyApplication from "../Pages/Dashboard/MyApplication/MyApplication";
 import PaymentSuccess from "../Pages/Dashboard/Payment/PaymentSuccess";
 import PaymentCancelled from "../Pages/Dashboard/Payment/PaymentCancelled";
 import ManagedStudentApplied from "../Pages/Dashboard/ManagedStudentApplied/ManagedStudentApplied";
+import AllReview from "../Pages/Dashboard/AllReview/AllReview";
 
 export const router = createBrowserRouter([
   // RootRelated
@@ -102,21 +103,25 @@ export const router = createBrowserRouter([
         Component: ManageScholarShip,
       },
       {
-        path: 'my-applicatioin',
-        Component:MyApplication
+        path: "my-applicatioin",
+        Component: MyApplication,
       },
       {
-        path:'payment-success',
-        Component:PaymentSuccess
+        path: "payment-success",
+        Component: PaymentSuccess,
       },
       {
-        path : 'payment-cancelled',
-        Component:PaymentCancelled
+        path: "payment-cancelled",
+        Component: PaymentCancelled,
       },
       {
-        path: 'manage-student-applied',
-        Component:ManagedStudentApplied
-      }
+        path: "manage-student-applied",
+        Component: ManagedStudentApplied,
+      },
+      {
+        path: "all-review",
+        Component:AllReview
+      },
     ],
   },
 ]);

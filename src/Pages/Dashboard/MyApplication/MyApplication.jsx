@@ -5,6 +5,7 @@ import Loading from "../../../Components/Loading/Loading";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 const PRIMARY_COLOR = "#35AC86";
 
@@ -171,25 +172,47 @@ const MyApplication = () => {
         <table className="min-w-full table-auto">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">#</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">University</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Status</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Payment</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">Actions</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                #
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                University
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Tracking ID
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Status
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Payment
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {applications.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-10 text-gray-400 text-lg">
+                <td
+                  colSpan="6"
+                  className="text-center py-10 text-gray-400 text-lg"
+                >
                   No applications yet.
                 </td>
               </tr>
             ) : (
               applications.map((app, index) => (
-                <tr key={app._id} className="hover:bg-gray-50 transition duration-150">
+                <tr
+                  key={app._id}
+                  className="hover:bg-gray-50 transition duration-150"
+                >
                   <td className="px-4 py-2">{index + 1}</td>
                   <td className="px-4 py-2">{app.universityName}</td>
+                  <Link to='#'>
+                    <td className="px-4 py-2">{app.trackingId}</td>
+                  </Link>
                   <td
                     className={`px-4 py-2 font-semibold capitalize ${
                       app.applicationStatus === "pending"
@@ -239,14 +262,15 @@ const MyApplication = () => {
                     )}
 
                     {/* Apply Approved: Show Pay button */}
-                    {app.applicationStatus === "approved" && app.paymentStatus === "unpaid" && (
-                      <button
-                        className="px-3 py-1 rounded text-white bg-green-500 hover:bg-green-600"
-                        onClick={() => openModal("pay", app)}
-                      >
-                        Pay Now
-                      </button>
-                    )}
+                    {app.applicationStatus === "approved" &&
+                      app.paymentStatus === "unpaid" && (
+                        <button
+                          className="px-3 py-1 rounded text-white bg-green-500 hover:bg-green-600"
+                          onClick={() => openModal("pay", app)}
+                        >
+                          Pay Now
+                        </button>
+                      )}
 
                     {/* Apply Cancelled: Show Cancelled/Re-apply info button */}
                     {app.applicationStatus === "rejected" && (
@@ -295,17 +319,35 @@ const MyApplication = () => {
             {selectedApp.scholarshipName}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg text-gray-700">
-            <p><strong>University:</strong> {selectedApp.universityName}</p>
-            <p><strong>Tracking ID:</strong> {selectedApp.trackingId || "N/A"}</p>
-            <p><strong>Category:</strong> {selectedApp.scholarshipCategory}</p>
-            <p><strong>Degree:</strong> {selectedApp.degree}</p>
-            <p><strong>Application Fee:</strong> ${selectedApp.applicationFees}</p>
-            <p><strong>Service Charge:</strong> ${selectedApp.serviceCharge}</p>
-            <p><strong>Status:</strong>{" "}
-              <span className="capitalize font-semibold">{selectedApp.applicationStatus}</span>
+            <p>
+              <strong>University:</strong> {selectedApp.universityName}
             </p>
-            <p><strong>Payment:</strong>{" "}
-              <span className="capitalize font-semibold">{selectedApp.paymentStatus}</span>
+            <p>
+              <strong>Tracking ID:</strong> {selectedApp.trackingId || "N/A"}
+            </p>
+            <p>
+              <strong>Category:</strong> {selectedApp.scholarshipCategory}
+            </p>
+            <p>
+              <strong>Degree:</strong> {selectedApp.degree}
+            </p>
+            <p>
+              <strong>Application Fee:</strong> ${selectedApp.applicationFees}
+            </p>
+            <p>
+              <strong>Service Charge:</strong> ${selectedApp.serviceCharge}
+            </p>
+            <p>
+              <strong>Status:</strong>{" "}
+              <span className="capitalize font-semibold">
+                {selectedApp.applicationStatus}
+              </span>
+            </p>
+            <p>
+              <strong>Payment:</strong>{" "}
+              <span className="capitalize font-semibold">
+                {selectedApp.paymentStatus}
+              </span>
             </p>
           </div>
         </Modal>
@@ -313,7 +355,9 @@ const MyApplication = () => {
 
       {modal.edit && selectedApp && (
         <Modal onClose={() => closeModal("edit")}>
-          <h3 className="text-xl font-bold mb-4 text-center text-yellow-600">Edit Application</h3>
+          <h3 className="text-xl font-bold mb-4 text-center text-yellow-600">
+            Edit Application
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label>Degree</label>
@@ -348,9 +392,14 @@ const MyApplication = () => {
 
       {modal.pay && selectedApp && (
         <Modal onClose={() => closeModal("pay")}>
-          <h3 className="text-xl font-bold mb-4 text-center text-green-600">Payment</h3>
+          <h3 className="text-xl font-bold mb-4 text-center text-green-600">
+            Payment
+          </h3>
           <p className="text-center mb-4">
-            Total: <span className="font-bold">${selectedApp.applicationFees + selectedApp.serviceCharge}</span>
+            Total:{" "}
+            <span className="font-bold">
+              ${selectedApp.applicationFees + selectedApp.serviceCharge}
+            </span>
           </p>
           <button
             onClick={handlePayment}
@@ -364,7 +413,12 @@ const MyApplication = () => {
 
       {modal.review && selectedApp && (
         <Modal onClose={() => closeModal("review")}>
-          <h3 className="text-xl font-bold mb-4 text-center" style={{ color: PRIMARY_COLOR }}>Add Review</h3>
+          <h3
+            className="text-xl font-bold mb-4 text-center"
+            style={{ color: PRIMARY_COLOR }}
+          >
+            Add Review
+          </h3>
           <textarea
             rows="4"
             className="w-full border p-2 rounded mb-3 focus:ring-2 focus:ring-green-500"
@@ -378,7 +432,9 @@ const MyApplication = () => {
             onChange={(e) => setRating(Number(e.target.value))}
           >
             {[5, 4, 3, 2, 1].map((r) => (
-              <option key={r} value={r}>{r} {r > 1 ? "Stars" : "Star"}</option>
+              <option key={r} value={r}>
+                {r} {r > 1 ? "Stars" : "Star"}
+              </option>
             ))}
           </select>
           <button
