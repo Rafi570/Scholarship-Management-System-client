@@ -157,6 +157,18 @@ const DashboardLayout = () => {
                 </li>
               </>
             )}
+            {role === "moderator" && (
+              <>
+                <li>
+                  <Link
+                    to="/dashboard/manage-student-applied"
+                    className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
+                  >
+                  Managed Student Applied 
+                  </Link>
+                </li>
+              </>
+            )}
             <li>
               <Link
                 to="/dashboard/profile"

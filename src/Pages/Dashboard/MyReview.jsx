@@ -81,7 +81,7 @@ const MyReview = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-gray-700 font-medium">#</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Scholarship Name</th>
+              {/* <th className="px-6 py-3 text-left text-gray-700 font-medium">Scholarship Name</th> */}
               <th className="px-6 py-3 text-left text-gray-700 font-medium">University Name</th>
               <th className="px-6 py-3 text-left text-gray-700 font-medium">Review Comment</th>
               <th className="px-6 py-3 text-left text-gray-700 font-medium">Review Date</th>
@@ -100,7 +100,7 @@ const MyReview = () => {
               reviews.map((review, index) => (
                 <tr key={review._id} className="hover:bg-gray-50 transition duration-150">
                   <td className="px-6 py-4 text-gray-800">{index + 1}</td>
-                  <td className="px-6 py-4 text-gray-800">{review.scholarshipName}</td>
+                  {/* <td className="px-6 py-4 text-gray-800">{review.scholarshipName}</td> */}
                   <td className="px-6 py-4 text-gray-800">{review.universityName}</td>
                   <td className="px-6 py-4 text-gray-800">{review.reviewText}</td>
                   <td className="px-6 py-4 text-gray-800">{new Date(review.postedAt).toLocaleDateString()}</td>

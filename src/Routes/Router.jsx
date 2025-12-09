@@ -17,6 +17,9 @@ import AddScholarShip from "../Pages/Dashboard/AddScholarShip/AddScholarShip";
 import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
 import ManageScholarShip from "../Pages/Dashboard/ManageScholarShip/ManageScholarShip";
 import MyApplication from "../Pages/Dashboard/MyApplication/MyApplication";
+import PaymentSuccess from "../Pages/Dashboard/Payment/PaymentSuccess";
+import PaymentCancelled from "../Pages/Dashboard/Payment/PaymentCancelled";
+import ManagedStudentApplied from "../Pages/Dashboard/ManagedStudentApplied/ManagedStudentApplied";
 
 export const router = createBrowserRouter([
   // RootRelated
@@ -102,6 +105,18 @@ export const router = createBrowserRouter([
         path: 'my-applicatioin',
         Component:MyApplication
       },
+      {
+        path:'payment-success',
+        Component:PaymentSuccess
+      },
+      {
+        path : 'payment-cancelled',
+        Component:PaymentCancelled
+      },
+      {
+        path: 'manage-student-applied',
+        Component:ManagedStudentApplied
+      }
     ],
   },
 ]);
