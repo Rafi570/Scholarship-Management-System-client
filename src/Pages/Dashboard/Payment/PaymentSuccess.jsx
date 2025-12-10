@@ -88,7 +88,7 @@ const PaymentSuccess = () => {
 
         {/* Button */}
         <button
-          onClick={() => navigate("/dashboard/my-applications")}
+          onClick={() => navigate("/dashboard/my-applicatioin")}
           className="mt-6 px-6 py-3 w-full btn-primary btn text-white rounded-lg shadow hover:bg-green-700 transition"
         >
           Go to My Applications

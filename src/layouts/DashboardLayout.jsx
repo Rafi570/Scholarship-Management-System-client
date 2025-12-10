@@ -164,7 +164,7 @@ const DashboardLayout = () => {
                     to="/dashboard/manage-student-applied"
                     className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
                   >
-                    Managed Student Applied
+                    Manage Student Applied
                   </Link>
                 </li>
                 <li>
@@ -172,7 +172,7 @@ const DashboardLayout = () => {
                     to="/dashboard/all-review"
                     className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
                   >
-                 All Review
+                 Manage Review
                   </Link>
                 </li>
               </>

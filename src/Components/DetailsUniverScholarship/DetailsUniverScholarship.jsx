@@ -232,7 +232,7 @@ const DetailsUniverScholarship = () => {
             Student Reviews
           </h2>
 
-          {/* POST REVIEW */}
+          {/* POST REVIEW
           {user ? (
             <div className="bg-[#E0F5EE] p-6 rounded-2xl mb-8 shadow-sm">
               <div className="flex items-center gap-4 mb-4">
@@ -291,7 +291,7 @@ const DetailsUniverScholarship = () => {
                 Please log in to write a review
               </p>
             </div>
-          )}
+          )} */}
 
           {/* REVIEW TABLE */}
           {reviews.length === 0 ? (

@@ -55,6 +55,7 @@ const MyApplication = () => {
       return res.data.data || [];
     },
   });
+  console.log(applications)
 
   const openModal = (type, app) => {
     setSelectedApp(app);
@@ -182,6 +183,9 @@ const MyApplication = () => {
                 Tracking ID
               </th>
               <th className="px-4 py-2 text-left font-medium text-gray-700">
+                FeedBack
+              </th>
+              <th className="px-4 py-2 text-left font-medium text-gray-700">
                 Status
               </th>
               <th className="px-4 py-2 text-left font-medium text-gray-700">
@@ -210,9 +214,16 @@ const MyApplication = () => {
                 >
                   <td className="px-4 py-2">{index + 1}</td>
                   <td className="px-4 py-2">{app.universityName}</td>
-                  <Link to='#'>
+                  <Link to="#">
                     <td className="px-4 py-2">{app.trackingId}</td>
                   </Link>
+                  <td className="px-4 py-2">
+                    {/* {app.feedback.length === 0 ? "noFeedback" : app.feedback}
+                     */}
+                     {!app.feedback ? "noFeedback" : app.feedback}
+
+                  </td>
+
                   <td
                     className={`px-4 py-2 font-semibold capitalize ${
                       app.applicationStatus === "pending"
