@@ -21,6 +21,9 @@ import PaymentSuccess from "../Pages/Dashboard/Payment/PaymentSuccess";
 import PaymentCancelled from "../Pages/Dashboard/Payment/PaymentCancelled";
 import ManagedStudentApplied from "../Pages/Dashboard/ManagedStudentApplied/ManagedStudentApplied";
 import AllReview from "../Pages/Dashboard/AllReview/AllReview";
+import AdminRoute from "./AdminRoute";
+import ModaretorRoute from "./ModaretorRoute";
+import AllApplication from "../Pages/Dashboard/DashboardHome/AllApplication/AllApplication";
 
 export const router = createBrowserRouter([
   // RootRelated
@@ -92,15 +95,30 @@ export const router = createBrowserRouter([
       },
       {
         path: "add-scholarship",
-        Component: AddScholarShip,
+        // Component: AddScholarShip,
+        element: (
+          <AdminRoute>
+            <AddScholarShip></AddScholarShip>
+          </AdminRoute>
+        ),
       },
       {
         path: "manage-users",
-        Component: ManageUsers,
+        // Component: ManageUsers,
+        element: (
+          <AdminRoute>
+            <ManageUsers></ManageUsers>
+          </AdminRoute>
+        ),
       },
       {
         path: "manage-scholarship",
-        Component: ManageScholarShip,
+        // Component: ManageScholarShip,
+        element: (
+          <AdminRoute>
+            <ManageScholarShip></ManageScholarShip>
+          </AdminRoute>
+        ),
       },
       {
         path: "my-applicatioin",
@@ -116,11 +134,29 @@ export const router = createBrowserRouter([
       },
       {
         path: "manage-student-applied",
-        Component: ManagedStudentApplied,
+        // Component: ManagedStudentApplied,
+        element: (
+          <ModaretorRoute>
+            <ManagedStudentApplied></ManagedStudentApplied>
+          </ModaretorRoute>
+        ),
       },
       {
         path: "all-review",
-        Component:AllReview
+        // Component:AllReview
+        element: (
+          <ModaretorRoute>
+            <AllReview></AllReview>
+          </ModaretorRoute>
+        ),
+      },
+      {
+        path: "all-application",
+        element: (
+          <ModaretorRoute>
+            <AllApplication></AllApplication>
+          </ModaretorRoute>
+        ),
       },
     ],
   },

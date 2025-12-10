@@ -169,10 +169,18 @@ const DashboardLayout = () => {
                 </li>
                 <li>
                   <Link
+                    to="/dashboard/all-application"
+                    className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
+                  >
+                    All Application
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/dashboard/all-review"
                     className="rounded-lg hover:bg-primary/10 hover:text-primary transition px-3 py-2"
                   >
-                 Manage Review
+                    Manage Review
                   </Link>
                 </li>
               </>

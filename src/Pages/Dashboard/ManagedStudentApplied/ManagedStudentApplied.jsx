@@ -3,7 +3,6 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Loading from "../../../Components/Loading/Loading";
-import Swal from "sweetalert2";
 
 const PRIMARY_COLOR = "#35AC86";
 
@@ -13,7 +12,7 @@ const Modal = ({ children, onClose }) => (
     <div className="bg-white w-full max-w-3xl rounded-2xl p-6 shadow-2xl relative overflow-y-auto max-h-[90vh]">
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 text-gray-600 hover:bg-gray-200 p-2 rounded-full transition duration-150"
+        className="absolute top-3 right-3 text-gray-600 hover:bg-gray-200 p-2 rounded-full transition"
       >
         ✕
       </button>
@@ -27,7 +26,9 @@ const ManageStudentApplied = () => {
 
   const [modal, setModal] = useState({
     feedback: false,
+    details: false,
   });
+
   const [selectedApp, setSelectedApp] = useState(null);
   const [feedbackText, setFeedbackText] = useState("");
 
@@ -44,14 +45,23 @@ const ManageStudentApplied = () => {
     },
   });
 
-  // ================= MODAL =================
+  // =============== OPEN DETAILS MODAL ===============
+  const openDetailsModal = (app) => {
+    setSelectedApp(app);
+    setModal((prev) => ({ ...prev, details: true }));
+  };
+  const closeDetailsModal = () =>
+    setModal((prev) => ({ ...prev, details: false }));
+
+  // ================= MODAL FEEDBACK =================
   const openFeedbackModal = (app) => {
     setSelectedApp(app);
     setFeedbackText(app.feedback || "");
     setModal((prev) => ({ ...prev, feedback: true }));
   };
 
-  const closeFeedbackModal = () => setModal((prev) => ({ ...prev, feedback: false }));
+  const closeFeedbackModal = () =>
+    setModal((prev) => ({ ...prev, feedback: false }));
 
   // ================= FEEDBACK SUBMIT =================
   const handleSubmitFeedback = async () => {
@@ -107,6 +117,7 @@ const ManageStudentApplied = () => {
               <th className="px-4 py-2 text-left">University</th>
               <th className="px-4 py-2 text-left">Feedback</th>
               <th className="px-4 py-2 text-left">Status</th>
+              <th className="px-4 py-2 text-left">Payment</th>
               <th className="px-4 py-2 text-left">Actions</th>
             </tr>
           </thead>
@@ -114,7 +125,7 @@ const ManageStudentApplied = () => {
           <tbody>
             {applications.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-8 text-gray-500">
+                <td colSpan="7" className="text-center py-8 text-gray-500">
                   No pending applications found.
                 </td>
               </tr>
@@ -125,11 +136,25 @@ const ManageStudentApplied = () => {
                   <td className="px-4 py-2">{app.userEmail}</td>
                   <td className="px-4 py-2">{app.universityName}</td>
                   <td className="px-4 py-2">
-                    {app.feedback && app.feedback.trim() !== "" ? app.feedback : "No Feedback"}
+                    {app.feedback?.trim() ? app.feedback : "No Feedback"}
                   </td>
                   <td className="px-4 py-2 capitalize">{app.applicationStatus}</td>
+
+                  {/* PAYMENT STATUS */}
+                  <td className="px-4 py-2">
+                    {app.paymentStatus}
+                  </td>
+
                   <td className="px-4 py-2 flex flex-wrap gap-2">
-                    {/* Feedback Modal */}
+                    {/* DETAILS BUTTON */}
+                    <button
+                      className="px-3 py-1 rounded text-white bg-purple-600 hover:bg-purple-700"
+                      onClick={() => openDetailsModal(app)}
+                    >
+                      Details
+                    </button>
+
+                    {/* Feedback */}
                     <button
                       className="px-3 py-1 rounded text-white bg-blue-500 hover:bg-blue-600"
                       onClick={() => openFeedbackModal(app)}
@@ -155,6 +180,25 @@ const ManageStudentApplied = () => {
           </tbody>
         </table>
       </div>
+
+      {/* ================= DETAILS MODAL ================= */}
+      {modal.details && selectedApp && (
+        <Modal onClose={closeDetailsModal}>
+          <h3 className="text-xl font-bold mb-4 text-center" style={{ color: PRIMARY_COLOR }}>
+            Application Details
+          </h3>
+
+          <div className="space-y-2">
+            <p><strong>Name:</strong> {selectedApp.userName}</p>
+            <p><strong>Email:</strong> {selectedApp.userEmail}</p>
+            <p><strong>University:</strong> {selectedApp.universityName}</p>
+            <p><strong>Scholarship Name:</strong> {selectedApp.scholarshipName}</p>
+            <p><strong>Application Status:</strong> {selectedApp.applicationStatus}</p>
+            <p><strong>Payment Status:</strong> {selectedApp.paymentStatus ? "Paid" : "Unpaid"}</p>
+            <p><strong>Feedback:</strong> {selectedApp.feedback || "No feedback yet"}</p>
+          </div>
+        </Modal>
+      )}
 
       {/* ================= FEEDBACK MODAL ================= */}
       {modal.feedback && selectedApp && (

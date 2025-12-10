@@ -7,6 +7,7 @@ import Forbidden from "../Components/Forbidden/Forbidden";
 const ModaretorRoute = ({ children }) => {
   const { loading, user } = useAuth();
   const { role, roleLoading } = useRole();
+  // console.log(role)
 
   if (loading || !user || roleLoading) {
     return <Loading></Loading>;
@@ -14,6 +15,7 @@ const ModaretorRoute = ({ children }) => {
 
   if (role !== "moderator") {
     return <Forbidden></Forbidden>;
+
   }
 
   return children;
