@@ -28,15 +28,33 @@ const AllApplication = () => {
         <table className="min-w-full table-auto">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">#</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Name</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Email</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">University</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Category</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Degree</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Status</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Payment</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Applied On</th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                #
+              </th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                Email
+              </th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                University
+              </th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                Category
+              </th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                Degree
+              </th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                Payment
+              </th>
+              <th className="px-6 py-3 text-left text-gray-700 font-medium">
+                Applied On
+              </th>
             </tr>
           </thead>
 
@@ -59,33 +77,39 @@ const AllApplication = () => {
                   <td className="px-6 py-4 text-gray-800">{index + 1}</td>
                   <td className="px-6 py-4 text-gray-800">{app.userName}</td>
                   <td className="px-6 py-4 text-gray-800">{app.userEmail}</td>
-                  <td className="px-6 py-4 text-gray-800">{app.universityName}</td>
-                  <td className="px-6 py-4 text-gray-800">{app.scholarshipCategory}</td>
+                  <td className="px-6 py-4 text-gray-800">
+                    {app.universityName}
+                  </td>
+                  <td className="px-6 py-4 text-gray-800">
+                    {app.scholarshipCategory}
+                  </td>
                   <td className="px-6 py-4 text-gray-800">{app.degree}</td>
 
-            <td className="px-6 py-4">
-  <span
-    className={`font-semibold ${
-      app.applicationStatus === "approved"
-        ? "text-green-600"
-        : app.applicationStatus === "rejected"
-        ? "text-red-600"
-        : "text-yellow-600"
-    }`}
-  >
-    {app.applicationStatus}
-  </span>
-</td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`font-semibold ${
+                        app.applicationStatus === "approved"
+                          ? "text-green-600"
+                          : app.applicationStatus === "rejected"
+                          ? "text-red-600"
+                          : "text-yellow-600"
+                      }`}
+                    >
+                      {app.applicationStatus}
+                    </span>
+                  </td>
 
-<td className="px-6 py-4">
-  <span
-    className={`font-semibold ${
-      app.paymentStatus === "paid" ? "text-green-600" : "text-red-600"
-    }`}
-  >
-    {app.paymentStatus === "paid" ? "Paid" : "Unpaid"}
-  </span>
-</td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`font-semibold ${
+                        app.paymentStatus === "paid"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {app.paymentStatus === "paid" ? "Paid" : "Unpaid"}
+                    </span>
+                  </td>
 
                   <td className="px-6 py-4 text-gray-800">
                     {new Date(app.applicationDate).toLocaleDateString()}
