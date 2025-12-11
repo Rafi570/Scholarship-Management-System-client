@@ -7,7 +7,7 @@ const Profile = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">My <span className="text-primary">Profile</span></h2>
+      <h2 className="text-2xl text-center font-bold mb-6 text-gray-800">My <span className="text-primary">Profile</span></h2>
 
       <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-6 flex flex-col md:flex-row items-center gap-6 border border-gray-200">
         {/* Avatar */}

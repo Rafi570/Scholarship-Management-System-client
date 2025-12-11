@@ -104,7 +104,7 @@ const ManageStudentApplied = () => {
 
   return (
     <div className="max-w-7xl mx-auto mt-6 p-4 bg-white shadow rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">
+      <h2 className="text-2xl font-bold mb-4 text-center">
         Manage <span style={{ color: PRIMARY_COLOR }}>Applied Applications</span>
       </h2>
 
