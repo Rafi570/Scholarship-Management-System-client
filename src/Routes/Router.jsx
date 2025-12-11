@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: ({ params }) =>
-          fetch(`http://localhost:3000/scholarships/${params.id}`),
+          fetch(`https://scholarship-management-system-serve-one.vercel.app/scholarships/${params.id}`),
         hydrateFallbackElement: <Loading></Loading>,
       },
       {
