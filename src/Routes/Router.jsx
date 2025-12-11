@@ -24,12 +24,15 @@ import AllReview from "../Pages/Dashboard/AllReview/AllReview";
 import AdminRoute from "./AdminRoute";
 import ModaretorRoute from "./ModaretorRoute";
 import AllApplication from "../Pages/Dashboard/DashboardHome/AllApplication/AllApplication";
+import TrackingApplication from "../Pages/Dashboard/TrackingApplication/TrackingApplication";
+import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 
 export const router = createBrowserRouter([
   // RootRelated
   {
     path: "/",
     Component: RootLayout,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -47,6 +50,10 @@ export const router = createBrowserRouter([
         hydrateFallbackElement: <Loading></Loading>,
       },
       {
+        path: "/tracking-application/:trackingId",
+        Component: TrackingApplication,
+      },
+      {
         path: "/scholarships",
         Component: AllScholarShip,
       },
@@ -56,6 +63,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: AuthLayout,
+    errorElement: <ErrorPage />, 
     children: [
       {
         path: "/auth/login",
@@ -80,6 +88,7 @@ export const router = createBrowserRouter([
         <DashboardLayout></DashboardLayout>
       </PrivateRoute>
     ),
+    errorElement: <ErrorPage />, 
     children: [
       {
         index: true,
@@ -124,6 +133,7 @@ export const router = createBrowserRouter([
         path: "my-applicatioin",
         Component: MyApplication,
       },
+
       {
         path: "payment-success",
         Component: PaymentSuccess,
@@ -159,5 +169,9 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+    {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);

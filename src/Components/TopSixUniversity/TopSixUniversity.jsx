@@ -9,6 +9,7 @@ import SingleTopUniversity from "../singleTopUniversity/singleTopUniversity";
 import useAuth from "../../hooks/useAuth";
 
 const TopSixUniversity = () => {
+  const PRIMARY_COLOR = "#35AC86";
   const axiosSecure = useAxiosSecure();
   const {loading}=useAuth()
   const { data: scholarships = [], isLoading } = useQuery({
@@ -23,7 +24,7 @@ const TopSixUniversity = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-gray-100 to-white">
+    <section className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
@@ -31,7 +32,7 @@ const TopSixUniversity = () => {
           transition={{ duration: 0.7 }}
           className="text-4xl font-extrabold text-center mb-14 text-gray-800"
         >
-          🎓 Top Affordable Scholarships
+          🎓 Top <span style={{ color: PRIMARY_COLOR }}>Affordable</span>  Scholarships
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">

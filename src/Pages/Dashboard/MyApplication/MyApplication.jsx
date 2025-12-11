@@ -55,7 +55,7 @@ const MyApplication = () => {
       return res.data.data || [];
     },
   });
-  console.log(applications)
+  // console.log(applications);
 
   const openModal = (type, app) => {
     setSelectedApp(app);
@@ -214,14 +214,14 @@ const MyApplication = () => {
                 >
                   <td className="px-4 py-2">{index + 1}</td>
                   <td className="px-4 py-2">{app.universityName}</td>
-                  <Link to="#">
-                    <td className="px-4 py-2">{app.trackingId}</td>
+                  <Link to={`/tracking-application/${app.trackingId}`}>
+                    <td className="px-4 py-2 text-blue-600 hover:underline">{app.trackingId}</td>
                   </Link>
+
                   <td className="px-4 py-2">
                     {/* {app.feedback.length === 0 ? "noFeedback" : app.feedback}
                      */}
-                     {!app.feedback ? "noFeedback" : app.feedback}
-
+                    {!app.feedback ? "noFeedback" : app.feedback}
                   </td>
 
                   <td

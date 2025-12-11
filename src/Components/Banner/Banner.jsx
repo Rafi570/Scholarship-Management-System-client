@@ -8,7 +8,6 @@ const ScholarshipBanner = () => {
   const navigate = useNavigate();
   const ref = useRef(null);
 
-  // এটা true হবে যখন ব্যানারটা viewport-এ দেখা যাবে
   const isInView = useInView(ref, { once: false, amount: 0.3 });
 
   return (
@@ -29,7 +28,6 @@ const ScholarshipBanner = () => {
       {/* Content */}
       <div className="relative flex flex-1 items-center justify-center px-6 py-20">
         <div className="max-w-6xl text-center">
-
           {/* Title - Re-animates every time it comes into view */}
           <motion.h1
             initial={{ opacity: 0, y: 60 }}
@@ -42,10 +40,14 @@ const ScholarshipBanner = () => {
             <br />
             <motion.span
               initial={{ opacity: 0, backgroundSize: "0% 100%" }}
-              animate={isInView ? {
-                opacity: 1,
-                backgroundSize: "100% 100%"
-              } : {}}
+              animate={
+                isInView
+                  ? {
+                      opacity: 1,
+                      backgroundSize: "100% 100%",
+                    }
+                  : {}
+              }
               transition={{ duration: 1.2, delay: 0.5 }}
               className="bg-gradient-to-r from-primary via-blue-400 to-purple-500 
                          bg-clip-text text-transparent 
@@ -63,7 +65,8 @@ const ScholarshipBanner = () => {
             transition={{ duration: 1, delay: 0.8 }}
             className="mt-6 text-lg text-white/90 md:text-xl lg:text-2xl"
           >
-            Discover thousands of fully-funded opportunities waiting just for you.
+            Discover thousands of fully-funded opportunities waiting just for
+            you.
           </motion.p>
 
           {/* Button with Shine + Bounce on Appear */}
@@ -105,7 +108,6 @@ const ScholarshipBanner = () => {
               </div>
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>
