@@ -1,16 +1,87 @@
-# React + Vite
+# 🚀 Scholarship Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a comprehensive Scholarship Management Platform designed to facilitate students in discovering and applying for scholarships, while providing Admin and Moderator users with the necessary tools to efficiently manage applications and platform content.
 
-Currently, two official plugins are available:
+## 🌐 Live Links
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| Description | Link |
+| :--- | :--- |
+| **Hosting URL (Frontend)** | [https://scholarship-management-s-8675e.web.app](https://scholarship-management-s-8675e.web.app) |
+| **Server URL (Backend)** | [https://scholarship-management-system-serve-one.vercel.app](https://scholarship-management-system-serve-one.vercel.app) |
 
-## React Compiler
+## ✨ Core Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. All Scholarships Page
 
-## Expanding the ESLint configuration
+* **Responsive Grid:** Displays all available scholarships on the platform.
+* **Search Functionality:** Users can search for scholarships by Scholarship Name, University Name, or Degree.
+* **Filter Functionality:** Options to filter scholarships by specific criteria (e.g., Scholarship Category, Subject Category, or Location).
+* **Card Information:** Each card displays University Image, Name, Category, Location, Application Fees, and a "View Details" button.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 2. Scholarship Details Page
+
+* Displays comprehensive information: University Image, Scholarship Name, University World Rank, Deadline, Location, Application Fees, Description, and Stipend/Coverage details.
+* **Reviews Section:** Shows all associated reviews (reviewer image, name, date, rating, and comment).
+* **'Apply for Scholarship' Button:** Redirects the user to the Payment/Checkout page.
+
+### 3. Role-Based Dashboard
+
+A single `/dashboard` path with a conditional sidebar based on the user's role (Student, Moderator, Admin).
+
+| Role | Key Features |
+| :--- | :--- |
+| **Admin** | `My Profile`, `Add Scholarship`, `Manage Scholarships` (Update/Delete), `Manage Users` (Role Change/Delete), `Analytics` (Total Users, Fees, Charts). |
+| **Moderator** | `My Profile`, `Manage Applied Applications` (Details, Feedback, Status Update, Cancel), `All Reviews` (Delete). |
+| **Student** | `My Profile`, `My Applications` (Details, Edit, Pay, Delete), `Add Review`, `My Reviews` (Edit, Delete). |
+
+### 4. Payment System and Application Flow
+
+* **Checkout Page:** Dedicated page for payment upon clicking 'Apply'.
+* **Stripe Integration:** Secure implementation for handling payments.
+* **Application Saving:** On **successful** payment, the application is saved with `paymentStatus: "paid"`. On **failure**, it's saved with `paymentStatus: "unpaid"`, allowing the student to retry payment from the dashboard.
+* **Payment Status Pages:** Separate success and failure pages with relevant details and navigation options.
+
+### 5. Additional Features
+
+* **Loading States:** Implemented loading spinners/skeletons on all data-fetching pages for better UX.
+* **Custom Error Page:** A custom 404 Error page for invalid routes.
+
+## 🛠️ Technologies Used
+
+* **Frontend:** (Add your specific frontend framework here, e.g., React, Next.js)
+* **Backend:** (Add your specific backend technology here, e.g., Node.js, Express.js)
+* **Database:** (Add your database, e.g., MongoDB, Firebase Firestore)
+* **Payment Gateway:** Stripe
+* **Hosting:** Firebase Hosting (Frontend), Vercel/Others (Backend)
+
+## ⚙️ Installation Guide
+
+Follow these steps to set up the project locally:
+
+### 1. Clone the Repository
+
+```bash
+git clone <Your-Project-Repository-URL>
+cd <project-directory>
+```
+### 2. Frontend Setup
+
+```bash
+# Navigate to the frontend folder
+cd client (or your frontend folder name)
+npm install
+npm run dev (or your specific start script)
+```
+### 3. Backend Setup
+```bash
+# Navigate to the backend folder
+cd server (or your backend folder name)
+npm install
+npm start (or your specific start script)
+```
+### 4. Environment Variables (.env)
+```bash
+# Example: .env file
+DATABASE_URL=...
+STRIPE_SECRET_KEY=...
+```
