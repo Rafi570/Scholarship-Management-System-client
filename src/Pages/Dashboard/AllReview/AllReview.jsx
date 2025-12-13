@@ -35,7 +35,7 @@ const AllReview = () => {
           Swal.fire("Deleted!", "Review has been deleted.", "success");
           refetch();
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           Swal.fire("Error!", "Failed to delete review.", "error");
         }
       }

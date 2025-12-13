@@ -13,7 +13,7 @@ const statusLabels = {
 
 const TrackingApplication = () => {
   const { trackingId } = useParams();
-  console.log(trackingId)
+  // console.log(trackingId)
   const axiosSecure = useAxiosSecure();
 
   const [timeline, setTimeline] = useState([]);
@@ -23,10 +23,10 @@ const TrackingApplication = () => {
     const loadTimeline = async () => {
       try {
         const res = await axiosSecure.get(`/trackings/${trackingId}`);
-        console.log(res.data)
+        // console.log(res.data)
         setTimeline(res.data);
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       } finally {
         setLoading(false);
       }
