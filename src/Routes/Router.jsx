@@ -26,6 +26,8 @@ import ModaretorRoute from "./ModaretorRoute";
 import AllApplication from "../Pages/Dashboard/DashboardHome/AllApplication/AllApplication";
 import TrackingApplication from "../Pages/Dashboard/TrackingApplication/TrackingApplication";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import Blog from "../Components/Blog/Blog";
+import ContactUs from "../Components/ContactUs/ContactUs";
 
 export const router = createBrowserRouter([
   // RootRelated
@@ -41,14 +43,25 @@ export const router = createBrowserRouter([
       {
         path: "/scholarship/:id",
         element: (
-          <PrivateRoute>
+
             <DetailsUniverScholarship></DetailsUniverScholarship>
-          </PrivateRoute>
+
         ),
         loader: ({ params }) =>
           fetch(`https://scholarship-management-system-serve-one.vercel.app/scholarships/${params.id}`),
         hydrateFallbackElement: <Loading></Loading>,
       },
+      {
+        path:"/blog",
+        Component: Blog
+
+      },
+            {
+        path:"/contact",
+        Component: ContactUs
+
+      },
+
       {
         path: "/tracking-application/:trackingId",
         Component: TrackingApplication,

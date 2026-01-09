@@ -10,7 +10,7 @@ const DetailsUniverScholarship = () => {
   const { _id } = useLoaderData();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
@@ -18,6 +18,7 @@ const DetailsUniverScholarship = () => {
 
   const { data: scholarship = {}, isLoading } = useQuery({
     queryKey: ["scholarship", _id],
+    enabled: true, // details always fetch
     queryFn: async () => {
       const res = await axiosSecure.get(`/scholarships/${_id}`);
       return res.data;
@@ -26,6 +27,7 @@ const DetailsUniverScholarship = () => {
 
   const { data: reviews = [], refetch } = useQuery({
     queryKey: ["reviews", _id],
+    enabled: !!user, // only fetch reviews if logged-in
     queryFn: async () => {
       const res = await axiosSecure.get(`/review?scholarshipId=${_id}`);
       return res.data;
@@ -34,10 +36,6 @@ const DetailsUniverScholarship = () => {
 
   const handleApply = async () => {
     if (!user) return toast.error("Please login to apply");
-
-    if (!scholarship || !scholarship._id) {
-      return toast.error("Scholarship not found");
-    }
 
     const applicationData = {
       scholarshipId: scholarship._id,
@@ -50,22 +48,21 @@ const DetailsUniverScholarship = () => {
       degree: scholarship.degree || "",
       applicationFees: Number(scholarship.applicationFees) || 0,
       serviceCharge: Number(scholarship.serviceCharge) || 0,
-      applicationStatus: "pending", // default
-      paymentStatus: "unpaid", // default
+      applicationStatus: "pending",
+      paymentStatus: "unpaid",
       applicationDate: new Date(),
-      feedback: "", // empty initially
+      feedback: "",
     };
 
     try {
       const res = await axiosSecure.post("/application", applicationData);
       if (res.data.success) {
         toast.success("Application submitted successfully 🎉");
-        navigate('/dashboard/my-applicatioin')
+        navigate("/dashboard/my-applicatioin");
       } else {
         toast.error(res.data.message || "Failed to submit application");
       }
     } catch (err) {
-      console.error(err);
       toast.error("Server error! Failed to submit application.");
     }
   };
@@ -102,9 +99,7 @@ const DetailsUniverScholarship = () => {
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
-          className={`text-lg ${
-            star <= rating ? "text-yellow-400" : "text-gray-300"
-          }`}
+          className={`text-lg ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
         >
           ★
         </span>
@@ -203,102 +198,34 @@ const DetailsUniverScholarship = () => {
 
               {/* APPLY BUTTON */}
               <div className="mt-10 flex flex-col gap-3 items-start sm:items-center">
+                {!user && (
+                  <p className="text-red-600 font-medium text-center">
+                    Please login to apply or post review
+                  </p>
+                )}
                 <button
                   onClick={handleApply}
-                  disabled={!isApplicationOpen}
+                  disabled={!isApplicationOpen || !user}
                   className={`w-full text-white font-bold text-xl py-5 rounded-2xl shadow-lg transition ${
-                    isApplicationOpen
+                    isApplicationOpen && user
                       ? "bg-[#35AC86] hover:bg-[#2e9974]"
                       : "bg-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  {isApplicationOpen
-                    ? "Apply for Scholarship"
-                    : "Deadline Passed"}
+                  {isApplicationOpen ? "Apply for Scholarship" : "Deadline Passed"}
                 </button>
-                {isApplicationOpen && (
-                  <p className="text-gray-700 font-medium text-sm">
-                    Time left: {timeLeft}
-                  </p>
-                )}
               </div>
             </div>
           </div>
         </div>
 
         {/* Reviews */}
-        <div className="bg-white/90 rounded-3xl shadow-xl p-6 lg:p-12 border border-gray-200">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
-            Student Reviews
-          </h2>
+        {user && reviews.length > 0 && (
+          <div className="bg-white/90 rounded-3xl shadow-xl p-6 lg:p-12 border border-gray-200">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              Student Reviews
+            </h2>
 
-          {/* POST REVIEW
-          {user ? (
-            <div className="bg-[#E0F5EE] p-6 rounded-2xl mb-8 shadow-sm">
-              <div className="flex items-center gap-4 mb-4">
-                <img
-                  src={user.photoURL || "/default-avatar.png"}
-                  alt={user.displayName}
-                  className="w-14 h-14 rounded-full shadow"
-                />
-                <div>
-                  <p className="font-semibold text-gray-800">
-                    {user.displayName}
-                  </p>
-                  <p className="text-sm text-gray-500">{user.email}</p>
-                </div>
-              </div>
-
-              <form onSubmit={handlePostReview} className="flex flex-col gap-4">
-                <div className="relative">
-                  <textarea
-                    value={reviewText}
-                    onChange={(e) => setReviewText(e.target.value)}
-                    className="w-full p-4 pt-6 border-2 border-gray-200 rounded-xl shadow-sm focus:border-[#35AC86] outline-none"
-                    rows="4"
-                    required
-                  />
-                  <label className="absolute top-2 left-4 text-gray-500 text-sm">
-                    Write your experience...
-                  </label>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <select
-                    value={rating}
-                    onChange={(e) => setRating(e.target.value)}
-                    className="px-4 py-2 border-2 border-gray-300 rounded-xl text-lg focus:border-[#35AC86] outline-none"
-                  >
-                    {[5, 4, 3, 2, 1].map((r) => (
-                      <option key={r} value={r}>
-                        {r} Star{r < 5 ? "s" : ""}
-                      </option>
-                    ))}
-                  </select>
-
-                  <button
-                    type="submit"
-                    className="bg-[#35AC86] hover:bg-[#2e9974] text-white font-bold px-6 py-2 rounded-xl shadow-md w-full sm:w-auto"
-                  >
-                    Post Review
-                  </button>
-                </div>
-              </form>
-            </div>
-          ) : (
-            <div className="text-center py-8 bg-gray-50 rounded-2xl mb-8">
-              <p className="text-lg text-gray-600">
-                Please log in to write a review
-              </p>
-            </div>
-          )} */}
-
-          {/* REVIEW TABLE */}
-          {reviews.length === 0 ? (
-            <p className="text-center text-gray-500 py-10 text-lg">
-              No reviews yet — be the first!
-            </p>
-          ) : (
             <div className="overflow-x-auto rounded-xl border">
               <table className="min-w-full text-left text-gray-700">
                 <thead className="bg-gray-100">
@@ -319,13 +246,10 @@ const DetailsUniverScholarship = () => {
                         />
                         <span className="font-medium">{review.userName}</span>
                       </td>
-
                       <td className="px-4 py-3">
                         <StarRating rating={review.rating} />
                       </td>
-
                       <td className="px-4 py-3">{review.reviewText}</td>
-
                       <td className="px-4 py-3 text-sm text-gray-500">
                         {new Date(review.postedAt).toLocaleDateString("en-US", {
                           day: "numeric",
@@ -338,8 +262,8 @@ const DetailsUniverScholarship = () => {
                 </tbody>
               </table>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

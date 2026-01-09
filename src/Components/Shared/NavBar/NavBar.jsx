@@ -14,26 +14,28 @@ const NavBar = () => {
     }
   };
 
-  const activeLink =
-    "text-primary font-semibold";
+  const activeLink = "text-primary font-semibold";
 
   return (
     <nav className="backdrop-blur-md bg-white/70 border-b border-gray-200 shadow-sm px-4 md:px-10 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center h-16">
-
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold tracking-tight flex items-center gap-1">
+        <Link
+          to="/"
+          className="text-xl font-bold tracking-tight flex items-center gap-1"
+        >
           <span className="text-gray-800">Scholarship</span>
           <span className="text-primary font-extrabold">Finder</span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex gap-6 items-center">
-
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `text-sm font-medium transition ${isActive ? activeLink : "text-gray-700 hover:text-primary"}`
+              `text-sm font-medium transition ${
+                isActive ? activeLink : "text-gray-700 hover:text-primary"
+              }`
             }
           >
             Home
@@ -42,10 +44,22 @@ const NavBar = () => {
           <NavLink
             to="/scholarships"
             className={({ isActive }) =>
-              `text-sm font-medium transition ${isActive ? activeLink : "text-gray-700 hover:text-primary"}`
+              `text-sm font-medium transition ${
+                isActive ? activeLink : "text-gray-700 hover:text-primary"
+              }`
             }
           >
             All Scholarships
+          </NavLink>
+          <NavLink
+            to="/blog"
+            className={({ isActive }) =>
+              `text-sm font-medium transition ${
+                isActive ? activeLink : "text-gray-700 hover:text-primary"
+              }`
+            }
+          >
+            Blog
           </NavLink>
 
           {user ? (
@@ -57,7 +71,11 @@ const NavBar = () => {
                 >
                   <div className="w-10 rounded-full ring-2 ring-primary/40">
                     <img
-                      src={user.photoURL || user.photo || "https://via.placeholder.com/40"}
+                      src={
+                        user.photoURL ||
+                        user.photo ||
+                        "https://via.placeholder.com/40"
+                      }
                     />
                   </div>
                 </div>
@@ -75,6 +93,16 @@ const NavBar = () => {
                     }
                   >
                     Dashboard
+                  </NavLink>
+                </li>
+                                <li>
+                  <NavLink
+                    to="/dashboard/my-applicatioin"
+                    className={({ isActive }) =>
+                      `${isActive ? activeLink : ""}`
+                    }
+                  >
+                    My Application
                   </NavLink>
                 </li>
 
@@ -110,16 +138,34 @@ const NavBar = () => {
           className="md:hidden btn btn-square btn-ghost"
         >
           {menuOpen ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-7 w-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-7 w-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           )}
         </button>
@@ -128,11 +174,14 @@ const NavBar = () => {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden mt-2 px-4 pb-4 flex flex-col gap-3 bg-white backdrop-blur-md border-b border-gray-200 pt-4">
-
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `py-3 rounded-lg font-medium transition ${isActive ? activeLink : "text-gray-700 hover:bg-primary/10 hover:text-primary"}`
+              `py-3 rounded-lg font-medium transition ${
+                isActive
+                  ? activeLink
+                  : "text-gray-700 hover:bg-primary/10 hover:text-primary"
+              }`
             }
           >
             Home
@@ -141,7 +190,11 @@ const NavBar = () => {
           <NavLink
             to="/scholarships"
             className={({ isActive }) =>
-              `py-3 rounded-lg font-medium transition ${isActive ? activeLink : "text-gray-700 hover:bg-primary/10 hover:text-primary"}`
+              `py-3 rounded-lg font-medium transition ${
+                isActive
+                  ? activeLink
+                  : "text-gray-700 hover:bg-primary/10 hover:text-primary"
+              }`
             }
           >
             All Scholarships
@@ -151,7 +204,11 @@ const NavBar = () => {
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
-                `py-3 rounded-lg font-medium transition ${isActive ? activeLink : "text-gray-700 hover:bg-primary/10 hover:text-primary"}`
+                `py-3 rounded-lg font-medium transition ${
+                  isActive
+                    ? activeLink
+                    : "text-gray-700 hover:bg-primary/10 hover:text-primary"
+                }`
               }
             >
               Dashboard
