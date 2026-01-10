@@ -37,11 +37,19 @@ const DashboardLayout = () => {
         </label>
 
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold tracking-tight flex items-center gap-1">
+        {/* <Link to="/" className="text-xl font-bold tracking-tight flex items-center gap-1">
           <span className="text-gray-800 dark:text-gray-100">Scholarship</span>
           <span className="text-primary font-extrabold">Finder</span>
+        </Link> */}
+<Link to="/" className="group flex items-center gap-2">
+          <div className="w-10 h-10 bg-[#35AC86] rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-emerald-500/20 group-hover:rotate-12 transition-transform">
+            S
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="text-lg font-black tracking-tighter dark:text-white uppercase">Scholarship</span>
+            <span className="text-[#35AC86] text-sm font-bold">Finder.</span>
+          </div>
         </Link>
-
         {/* User info desktop */}
         {user && (
           <div className="hidden lg:flex items-center gap-4">

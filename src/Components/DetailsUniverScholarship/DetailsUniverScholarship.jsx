@@ -5,15 +5,16 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "../Loading/Loading";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
+import { FiCalendar, FiGlobe, FiDollarSign, FiAward, FiClock } from "react-icons/fi";
+
+const PRIMARY_COLOR = "#35AC86";
 
 const DetailsUniverScholarship = () => {
   const { _id } = useLoaderData();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const [rating, setRating] = useState(5);
-  const [reviewText, setReviewText] = useState("");
   const [timeLeft, setTimeLeft] = useState("");
 
   const { data: scholarship = {}, isLoading } = useQuery({
@@ -24,7 +25,7 @@ const DetailsUniverScholarship = () => {
     },
   });
 
-  const { data: reviews = [], refetch } = useQuery({
+  const { data: reviews = [] } = useQuery({
     queryKey: ["reviews", _id],
     queryFn: async () => {
       const res = await axiosSecure.get(`/review?scholarshipId=${_id}`);
@@ -34,11 +35,9 @@ const DetailsUniverScholarship = () => {
 
   const handleApply = async () => {
     if (!user) return toast.error("Please login to apply");
-
-    if (!scholarship || !scholarship._id) {
-      return toast.error("Scholarship not found");
-    }
-
+    
+    // Redirecting to a checkout or application form is usually better, 
+    // but keeping your logic of direct post here:
     const applicationData = {
       scholarshipId: scholarship._id,
       userId: user.uid,
@@ -50,288 +49,172 @@ const DetailsUniverScholarship = () => {
       degree: scholarship.degree || "",
       applicationFees: Number(scholarship.applicationFees) || 0,
       serviceCharge: Number(scholarship.serviceCharge) || 0,
-      applicationStatus: "pending", // default
-      paymentStatus: "unpaid", // default
+      applicationStatus: "pending",
+      paymentStatus: "unpaid",
       applicationDate: new Date(),
-      feedback: "", // empty initially
+      feedback: "",
     };
 
     try {
       const res = await axiosSecure.post("/application", applicationData);
       if (res.data.success) {
         toast.success("Application submitted successfully 🎉");
-        navigate('/dashboard/my-applicatioin')
-      } else {
-        toast.error(res.data.message || "Failed to submit application");
+        navigate('/dashboard/my-applicatioin');
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Server error! Failed to submit application.");
+      toast.error("Failed to submit application.");
     }
   };
 
-  const handlePostReview = async (e) => {
-    e.preventDefault();
-    if (!user) return toast.error("Login to post review");
-
-    const reviewData = {
-      scholarshipId: _id,
-      userName: user.displayName,
-      userEmail: user.email,
-      userPhoto: user.photoURL || "",
-      universityName: scholarship.universityName,
-      scholarshipName: scholarship.scholarshipName,
-      rating: Number(rating),
-      reviewText,
-      postedAt: new Date(),
-    };
-
-    try {
-      await axiosSecure.post("/review", reviewData);
-      toast.success("Your review has been posted 🎉");
-      setReviewText("");
-      setRating(5);
-      refetch();
-    } catch (err) {
-      toast.error("Failed to post review");
-    }
-  };
-
-  const StarRating = ({ rating }) => (
-    <div className="flex items-center gap-1">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span
-          key={star}
-          className={`text-lg ${
-            star <= rating ? "text-yellow-400" : "text-gray-300"
-          }`}
-        >
-          ★
-        </span>
-      ))}
-      <span className="ml-2 font-medium text-gray-700">{rating}.0</span>
-    </div>
-  );
-
-  // Countdown
   useEffect(() => {
     if (!scholarship.applicationDeadline) return;
-
     const interval = setInterval(() => {
-      const deadline = new Date(scholarship.applicationDeadline);
-      const now = new Date();
-      const diff = deadline - now;
-
+      const diff = new Date(scholarship.applicationDeadline) - new Date();
       if (diff <= 0) {
         setTimeLeft("Deadline Passed");
         clearInterval(interval);
         return;
       }
-
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+      setTimeLeft(`${days}d ${hours}h ${minutes}m`);
     }, 1000);
-
     return () => clearInterval(interval);
   }, [scholarship.applicationDeadline]);
 
   if (isLoading) return <Loading />;
 
-  const isApplicationOpen =
-    scholarship.applicationDeadline &&
-    new Date(scholarship.applicationDeadline) >= new Date();
+  const isApplicationOpen = scholarship.applicationDeadline && new Date(scholarship.applicationDeadline) >= new Date();
 
   return (
-    <div className="min-h-screen bg-white/70 backdrop-blur-md py-10 px-4">
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#030712] py-12 px-4 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
-        {/* HERO */}
-        <div className="bg-white/90 rounded-3xl shadow-xl overflow-hidden mb-12 border border-gray-200">
-          <div className="grid lg:grid-cols-2 gap-0">
-            <div className="relative h-96 lg:h-full">
+        
+        {/* HERO SECTION */}
+        <div className="relative bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl overflow-hidden mb-12 border border-gray-100 dark:border-gray-800">
+          <div className="grid lg:grid-cols-2">
+            
+            {/* Image Side */}
+            <div className="relative h-[400px] lg:h-auto group">
               <img
                 src={scholarship.universityImage}
                 alt={scholarship.universityName}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70"></div>
-              <div className="absolute bottom-6 left-6 text-white">
-                <h1 className="text-4xl md:text-5xl font-bold drop-shadow-lg">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+              <div className="absolute bottom-8 left-8 right-8 text-white">
+                <span className="px-4 py-1.5 bg-emerald-500 text-white text-xs font-black uppercase tracking-widest rounded-full mb-4 inline-block">
+                  {scholarship.scholarshipCategory}
+                </span>
+                <h1 className="text-4xl md:text-5xl font-black leading-tight">
                   {scholarship.scholarshipName}
                 </h1>
-                <p className="text-xl md:text-2xl font-medium mt-2 opacity-95">
-                  {scholarship.universityName}
-                </p>
+                <div className="flex items-center gap-2 mt-3 text-gray-200">
+                  <FiGlobe className="text-emerald-400" />
+                  <p className="text-lg font-medium">{scholarship.universityName}</p>
+                </div>
               </div>
             </div>
 
-            <div className="p-8 lg:p-12 flex flex-col justify-between">
-              <div>
-                <div className="grid grid-cols-2 gap-6 mb-8">
-                  <div className="bg-blue-50 p-5 rounded-2xl text-center">
-                    <p className="text-gray-600 text-sm">World Rank</p>
-                    <p className="text-3xl font-bold text-blue-600">
-                      #{scholarship.universityWorldRank || "N/A"}
-                    </p>
+            {/* Content Side */}
+            <div className="p-8 lg:p-14 flex flex-col justify-between bg-white dark:bg-gray-900">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                <div className="p-6 rounded-3xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30">
+                  <div className="flex items-center gap-3 mb-2 text-blue-600 dark:text-blue-400">
+                    <FiAward size={20} />
+                    <span className="text-xs font-black uppercase tracking-widest">World Rank</span>
                   </div>
-                  <div className="bg-green-50 p-5 rounded-2xl text-center">
-                    <p className="text-gray-600 text-sm">Application Fee</p>
-                    <p className="text-3xl font-bold text-green-600">
-                      ${scholarship.applicationFees || 0}
-                    </p>
-                  </div>
+                  <p className="text-3xl font-black text-gray-800 dark:text-white">#{scholarship.universityWorldRank || "N/A"}</p>
                 </div>
 
-                <div className="space-y-4 text-gray-700">
-                  <div className="flex justify-between py-3 border-b">
-                    <span className="font-medium">Deadline</span>
-                    <span className="font-bold text-red-600">
-                      {new Date(
-                        scholarship.applicationDeadline
-                      ).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </span>
+                <div className="p-6 rounded-3xl bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-800/30">
+                  <div className="flex items-center gap-3 mb-2 text-emerald-600 dark:text-emerald-400">
+                    <FiDollarSign size={20} />
+                    <span className="text-xs font-black uppercase tracking-widest">Application Fee</span>
                   </div>
+                  <p className="text-3xl font-black text-gray-800 dark:text-white">${scholarship.applicationFees || 0}</p>
                 </div>
               </div>
 
-              {/* APPLY BUTTON */}
-              <div className="mt-10 flex flex-col gap-3 items-start sm:items-center">
-                <button
-                  onClick={handleApply}
-                  disabled={!isApplicationOpen}
-                  className={`w-full text-white font-bold text-xl py-5 rounded-2xl shadow-lg transition ${
-                    isApplicationOpen
-                      ? "bg-[#35AC86] hover:bg-[#2e9974]"
-                      : "bg-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  {isApplicationOpen
-                    ? "Apply for Scholarship"
-                    : "Deadline Passed"}
-                </button>
+              <div className="space-y-5 mb-10">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
+                   <div className="flex items-center gap-3 text-gray-500">
+                      <FiCalendar />
+                      <span className="font-bold text-sm uppercase">Deadline</span>
+                   </div>
+                   <span className="font-black text-red-500">
+                     {new Date(scholarship.applicationDeadline).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}
+                   </span>
+                </div>
+                
                 {isApplicationOpen && (
-                  <p className="text-gray-700 font-medium text-sm">
-                    Time left: {timeLeft}
-                  </p>
+                  <div className="flex items-center justify-between p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-800/20">
+                    <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400">
+                        <FiClock className="animate-pulse" />
+                        <span className="font-bold text-sm uppercase">Time Remaining</span>
+                    </div>
+                    <span className="font-black text-emerald-700 dark:text-emerald-400">{timeLeft}</span>
+                  </div>
                 )}
               </div>
+
+              <button
+                onClick={handleApply}
+                disabled={!isApplicationOpen}
+                className={`group relative w-full py-5 rounded-[1.5rem] font-black text-xl uppercase tracking-widest overflow-hidden transition-all shadow-xl active:scale-95 ${
+                  isApplicationOpen 
+                  ? "bg-[#35AC86] text-white hover:shadow-emerald-500/20" 
+                  : "bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                <span className="relative z-10">{isApplicationOpen ? "Apply Now" : "Admission Closed"}</span>
+                {isApplicationOpen && <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>}
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Reviews */}
-        <div className="bg-white/90 rounded-3xl shadow-xl p-6 lg:p-12 border border-gray-200">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
-            Student Reviews
-          </h2>
+        {/* REVIEWS SECTION */}
+        <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-xl p-8 lg:p-14 border border-gray-100 dark:border-gray-800">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="h-10 w-2 bg-emerald-500 rounded-full"></div>
+            <h2 className="text-3xl font-black text-gray-800 dark:text-white tracking-tight">Student Reviews</h2>
+          </div>
 
-          {/* POST REVIEW
-          {user ? (
-            <div className="bg-[#E0F5EE] p-6 rounded-2xl mb-8 shadow-sm">
-              <div className="flex items-center gap-4 mb-4">
-                <img
-                  src={user.photoURL || "/default-avatar.png"}
-                  alt={user.displayName}
-                  className="w-14 h-14 rounded-full shadow"
-                />
-                <div>
-                  <p className="font-semibold text-gray-800">
-                    {user.displayName}
-                  </p>
-                  <p className="text-sm text-gray-500">{user.email}</p>
-                </div>
-              </div>
-
-              <form onSubmit={handlePostReview} className="flex flex-col gap-4">
-                <div className="relative">
-                  <textarea
-                    value={reviewText}
-                    onChange={(e) => setReviewText(e.target.value)}
-                    className="w-full p-4 pt-6 border-2 border-gray-200 rounded-xl shadow-sm focus:border-[#35AC86] outline-none"
-                    rows="4"
-                    required
-                  />
-                  <label className="absolute top-2 left-4 text-gray-500 text-sm">
-                    Write your experience...
-                  </label>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <select
-                    value={rating}
-                    onChange={(e) => setRating(e.target.value)}
-                    className="px-4 py-2 border-2 border-gray-300 rounded-xl text-lg focus:border-[#35AC86] outline-none"
-                  >
-                    {[5, 4, 3, 2, 1].map((r) => (
-                      <option key={r} value={r}>
-                        {r} Star{r < 5 ? "s" : ""}
-                      </option>
-                    ))}
-                  </select>
-
-                  <button
-                    type="submit"
-                    className="bg-[#35AC86] hover:bg-[#2e9974] text-white font-bold px-6 py-2 rounded-xl shadow-md w-full sm:w-auto"
-                  >
-                    Post Review
-                  </button>
-                </div>
-              </form>
-            </div>
-          ) : (
-            <div className="text-center py-8 bg-gray-50 rounded-2xl mb-8">
-              <p className="text-lg text-gray-600">
-                Please log in to write a review
-              </p>
-            </div>
-          )} */}
-
-          {/* REVIEW TABLE */}
           {reviews.length === 0 ? (
-            <p className="text-center text-gray-500 py-10 text-lg">
-              No reviews yet — be the first!
-            </p>
+            <div className="text-center py-20 bg-gray-50 dark:bg-gray-800/30 rounded-[2rem] border-2 border-dashed border-gray-200 dark:border-gray-800">
+              <p className="text-gray-400 text-lg font-medium">No reviews yet — be the first to share your experience!</p>
+            </div>
           ) : (
-            <div className="overflow-x-auto rounded-xl border">
-              <table className="min-w-full text-left text-gray-700">
-                <thead className="bg-gray-100">
+            <div className="overflow-x-auto rounded-3xl border border-gray-100 dark:border-gray-800">
+              <table className="min-w-full text-left">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-4 py-3 font-semibold">Student</th>
-                    <th className="px-4 py-3 font-semibold">Rating</th>
-                    <th className="px-4 py-3 font-semibold">Review</th>
-                    <th className="px-4 py-3 font-semibold">Date</th>
+                    {["Student", "Rating", "Review", "Date"].map((h) => (
+                      <th key={h} className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">{h}</th>
+                    ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {reviews.map((review) => (
-                    <tr key={review._id} className="border-t">
-                      <td className="px-4 py-3 flex items-center gap-3">
-                        <img
-                          src={review.userPhoto || "/default-avatar.png"}
-                          className="w-10 h-10 rounded-full"
-                        />
-                        <span className="font-medium">{review.userName}</span>
+                    <tr key={review._id} className="group hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                      <td className="px-6 py-5">
+                        <div className="flex items-center gap-4">
+                          <img src={review.userPhoto || "/default-avatar.png"} className="w-12 h-12 rounded-2xl object-cover ring-2 ring-emerald-500/20 shadow-sm" alt="User" />
+                          <span className="font-bold text-gray-800 dark:text-gray-100">{review.userName}</span>
+                        </div>
                       </td>
-
-                      <td className="px-4 py-3">
-                        <StarRating rating={review.rating} />
+                      <td className="px-6 py-5">
+                        <div className="flex items-center gap-1 text-yellow-400">
+                          {[...Array(5)].map((_, i) => (
+                            <span key={i} className={i < review.rating ? "opacity-100" : "opacity-20"}>★</span>
+                          ))}
+                        </div>
                       </td>
-
-                      <td className="px-4 py-3">{review.reviewText}</td>
-
-                      <td className="px-4 py-3 text-sm text-gray-500">
-                        {new Date(review.postedAt).toLocaleDateString("en-US", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
+                      <td className="px-6 py-5 text-gray-600 dark:text-gray-400 text-sm max-w-md">{review.reviewText}</td>
+                      <td className="px-6 py-5 text-xs font-bold text-gray-400 uppercase tracking-tighter">
+                        {new Date(review.postedAt).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
                       </td>
                     </tr>
                   ))}

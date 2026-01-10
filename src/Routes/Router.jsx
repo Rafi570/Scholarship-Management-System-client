@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
         path: "/scholarship/:id",
         element: (
 
-          <PrivateRoute><DetailsUniverScholarship></DetailsUniverScholarship></PrivateRoute>
+       <DetailsUniverScholarship></DetailsUniverScholarship>
             
 
         ),
