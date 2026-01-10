@@ -1,5 +1,3 @@
-// components/TopSixUniversity.jsx
-
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -24,13 +22,13 @@ const TopSixUniversity = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4 bg-white dark:bg-gray-950 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          className="text-4xl font-extrabold text-center mb-14 text-gray-800"
+          className="text-4xl font-extrabold text-center mb-14 text-gray-800 dark:text-gray-100"
         >
           🎓 Top <span style={{ color: PRIMARY_COLOR }}>Affordable</span>  Scholarships
         </motion.h2>

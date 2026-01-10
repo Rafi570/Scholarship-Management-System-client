@@ -2,9 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaQuoteLeft, FaStar } from 'react-icons/fa';
 
-
 const PRIMARY_COLOR = "#35AC86";
-
 
 const testimonials = [
   {
@@ -23,91 +21,77 @@ const testimonials = [
   },
   {
     id: 3,
-    quote: "Finding scholarships that match my specific criteria (country, degree level, and subject) was incredibly easy with the robust filtering options. A truly useful resource.",
+    quote: "Finding scholarships that match my specific criteria was incredibly easy with the robust filtering options. A truly useful resource.",
     name: "Sohan Khan",
     program: "Ph.D. in Mechanical Engineering",
     rating: 4,
   },
 ];
 
-
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
+    transition: { staggerChildren: 0.2 },
   },
 };
 
 const itemVariants = {
-  hidden: { y: 50, opacity: 0, scale: 0.8 },
+  hidden: { y: 30, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 10,
-    },
+    transition: { type: "spring", stiffness: 100 },
   },
 };
 
 const Extra2 = () => {
   return (
     <motion.section 
-      className="py-16 md:py-24"
+      className="py-16 md:py-24  dark:bg-gray-950 transition-colors duration-500"
       initial="hidden"
-
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.1 }}
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header Section */}
-        <motion.div variants={itemVariants} className="text-center mb-12">
-          <p className="text-sm font-semibold uppercase tracking-wider" style={{ color: PRIMARY_COLOR }}>
+        <motion.div variants={itemVariants} className="text-center mb-16">
+          <p className="text-sm font-bold uppercase tracking-[0.2em]" style={{ color: PRIMARY_COLOR }}>
             Real Stories
           </p>
-          <h2 className="text-4xl font-extrabold text-gray-900 mt-2">
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mt-4">
             Success <span style={{ color: PRIMARY_COLOR }}>Stories</span> from Our Users
           </h2>
-          <p className="mt-4 text-xl text-gray-500 max-w-2xl mx-auto">
-            See how students achieved their academic dreams with the help of our platform.
-          </p>
+          <div className="w-20 h-1.5 bg-primary mx-auto mt-6 rounded-full"></div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((story) => (
             <motion.div 
               key={story.id}
-              className="bg-gray-50 p-6 rounded-xl shadow-lg flex flex-col h-full transition duration-300 border-b-4 hover:shadow-2xl"
-              style={{ borderColor: PRIMARY_COLOR }}
+              className="bg-gray-50 dark:bg-gray-900 p-8 rounded-[2rem] shadow-xl dark:shadow-none flex flex-col h-full border border-transparent dark:border-gray-800 transition-all hover:border-primary/50 group"
               variants={itemVariants}
               whileHover={{ y: -10 }}
             >
-              <FaQuoteLeft className="text-3xl mb-4" style={{ color: PRIMARY_COLOR }} />
+              <div className="relative mb-6">
+                <FaQuoteLeft className="text-4xl opacity-20 dark:opacity-10 absolute -top-2 -left-2" style={{ color: PRIMARY_COLOR }} />
+                <p className="relative z-10 italic text-gray-700 dark:text-gray-300 leading-relaxed">
+                  "{story.quote}"
+                </p>
+              </div>
               
-              {/* Quote Text */}
-              <p className="italic text-gray-700 mb-4 flex-grow">
-                "{story.quote}"
-              </p>
-              
-              {/* Rating Stars */}
-              <div className="flex items-center mb-3">
-                {[...Array(story.rating)].map((_, i) => (
-                  <FaStar key={i} className="text-yellow-400 w-4 h-4 mr-1" />
+              <div className="flex items-center mb-6">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar key={i} className={`w-4 h-4 mr-1 ${i < story.rating ? "text-yellow-400" : "text-gray-300 dark:text-gray-700"}`} />
                 ))}
               </div>
               
-              {/* User Info */}
-              <div className="mt-auto pt-4 border-t border-gray-200">
-                <p className="font-bold text-lg" style={{ color: PRIMARY_COLOR }}>
+              <div className="mt-auto pt-6 border-t border-gray-200 dark:border-gray-800">
+                <p className="font-black text-lg tracking-tight group-hover:text-primary transition-colors dark:text-white">
                   {story.name}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm font-bold text-gray-500 dark:text-gray-500 uppercase tracking-wide mt-1">
                   {story.program}
                 </p>
               </div>

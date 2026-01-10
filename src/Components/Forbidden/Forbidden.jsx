@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 const Forbidden = () => {
   const navigate = useNavigate();
+      useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.querySelector("html").setAttribute("data-theme", savedTheme);
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f0f8ff] px-6">

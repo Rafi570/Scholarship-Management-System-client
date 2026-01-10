@@ -14,6 +14,9 @@ const MyReview = () => {
   const [updatedText, setUpdatedText] = useState("");
   const [updatedRating, setUpdatedRating] = useState(0);
 
+  // Helper to check dark mode status
+  const isDarkMode = () => document.documentElement.classList.contains("dark");
+
   const { data: reviews = [], refetch } = useQuery({
     queryKey: ["my-Review", user?.email],
     queryFn: async () => {
@@ -35,12 +38,28 @@ const MyReview = () => {
         reviewText: updatedText,
         rating: updatedRating,
       });
-      Swal.fire("Updated!", "Your review has been updated.", "success");
+
+      // Dark mode optimized alert
+      Swal.fire({
+        title: "Updated!",
+        text: "Your review has been updated.",
+        icon: "success",
+        background: isDarkMode() ? "#111827" : "#fff",
+        color: isDarkMode() ? "#fff" : "#000",
+        confirmButtonColor: PRIMARY_COLOR,
+      });
+
       setModalOpen(false);
       refetch();
     } catch (error) {
       console.error(error);
-      Swal.fire("Error!", "Failed to update review.", "error");
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to update review.",
+        icon: "error",
+        background: isDarkMode() ? "#111827" : "#fff",
+        color: isDarkMode() ? "#fff" : "#000",
+      });
     }
   };
 
@@ -53,58 +72,69 @@ const MyReview = () => {
       confirmButtonColor: PRIMARY_COLOR,
       cancelButtonColor: "#6c757d",
       confirmButtonText: "Yes, delete it!",
+      // Dark mode optimized alert
+      background: isDarkMode() ? "#111827" : "#fff",
+      color: isDarkMode() ? "#fff" : "#000",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await axiosSecure.delete(`/review/${reviewId}`);
-          Swal.fire("Deleted!", "Your review has been deleted.", "success");
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your review has been deleted.",
+            icon: "success",
+            background: isDarkMode() ? "#111827" : "#fff",
+            color: isDarkMode() ? "#fff" : "#000",
+            confirmButtonColor: PRIMARY_COLOR,
+          });
           refetch();
         } catch (error) {
           console.error(error);
-          Swal.fire("Error!", "Failed to delete review.", "error");
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete review.",
+            icon: "error",
+            background: isDarkMode() ? "#111827" : "#fff",
+            color: isDarkMode() ? "#fff" : "#000",
+          });
         }
       }
     });
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h2
-        className="text-2xl font-bold mb-6 text-center"
-        
-      >
-        My  <span style={{ color: PRIMARY_COLOR }} >Reviews</span>
+    <div className="p-6 max-w-7xl mx-auto min-h-screen bg-transparent">
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+        My <span style={{ color: PRIMARY_COLOR }}>Reviews</span>
       </h2>
 
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+      <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg border border-transparent dark:border-gray-800">
         <table className="min-w-full table-auto">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">#</th>
-              {/* <th className="px-6 py-3 text-left text-gray-700 font-medium">Scholarship Name</th> */}
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">University Name</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Review Comment</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Review Date</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Rating</th>
-              <th className="px-6 py-3 text-left text-gray-700 font-medium">Actions</th>
+              <th className="px-6 py-3 text-left text-gray-700 dark:text-gray-300 font-medium">#</th>
+              <th className="px-6 py-3 text-left text-gray-700 dark:text-gray-300 font-medium">University Name</th>
+              <th className="px-6 py-3 text-left text-gray-700 dark:text-gray-300 font-medium">Review Comment</th>
+              <th className="px-6 py-3 text-left text-gray-700 dark:text-gray-300 font-medium">Review Date</th>
+              <th className="px-6 py-3 text-left text-gray-700 dark:text-gray-300 font-medium">Rating</th>
+              <th className="px-6 py-3 text-left text-gray-700 dark:text-gray-300 font-medium">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {reviews.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center py-10 text-gray-400 text-lg">
+                <td colSpan="7" className="text-center py-10 text-gray-400 dark:text-gray-500 text-lg">
                   You haven't written any reviews yet.
                 </td>
               </tr>
             ) : (
               reviews.map((review, index) => (
-                <tr key={review._id} className="hover:bg-gray-50 transition duration-150">
-                  <td className="px-6 py-4 text-gray-800">{index + 1}</td>
-                  {/* <td className="px-6 py-4 text-gray-800">{review.scholarshipName}</td> */}
-                  <td className="px-6 py-4 text-gray-800">{review.universityName}</td>
-                  <td className="px-6 py-4 text-gray-800">{review.reviewText}</td>
-                  <td className="px-6 py-4 text-gray-800">{new Date(review.postedAt).toLocaleDateString()}</td>
-                  <td className="px-6 py-4 text-gray-800">{review.rating}</td>
+                <tr key={review._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition duration-150">
+                  <td className="px-6 py-4 text-gray-800 dark:text-gray-200">{index + 1}</td>
+                  <td className="px-6 py-4 text-gray-800 dark:text-gray-200">{review.universityName}</td>
+                  <td className="px-6 py-4 text-gray-800 dark:text-gray-200">{review.reviewText}</td>
+                  <td className="px-6 py-4 text-gray-800 dark:text-gray-200">{new Date(review.postedAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-gray-800 dark:text-gray-200">{review.rating}</td>
                   <td className="px-6 py-4 flex gap-2">
                     <button
                       onClick={() => handleEdit(review)}
@@ -127,15 +157,14 @@ const MyReview = () => {
         </table>
       </div>
 
-      {/* Modern Animated Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl animate-fade-in transform transition-all scale-95 duration-300 ease-out">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-lg shadow-2xl animate-fade-in transform transition-all scale-95 duration-300 ease-out">
             <h3 className="text-xl font-bold mb-4" style={{ color: PRIMARY_COLOR }}>
               Edit Your Review
             </h3>
             <textarea
-              className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none transition"
+              className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none transition"
               rows={4}
               value={updatedText}
               onChange={(e) => setUpdatedText(e.target.value)}
@@ -144,14 +173,14 @@ const MyReview = () => {
               type="number"
               min="1"
               max="5"
-              className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+              className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
               value={updatedRating}
               onChange={(e) => setUpdatedRating(Number(e.target.value))}
             />
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setModalOpen(false)}
-                className="px-5 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition transform hover:scale-105"
+                className="px-5 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white transition transform hover:scale-105"
               >
                 Cancel
               </button>

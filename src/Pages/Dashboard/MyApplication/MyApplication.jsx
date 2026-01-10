@@ -12,10 +12,10 @@ const PRIMARY_COLOR = "#35AC86";
 // ================= CUSTOM MODAL =================
 const Modal = ({ children, onClose }) => (
   <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-    <div className="bg-white w-full max-w-3xl rounded-2xl p-6 shadow-2xl relative animate-fade-in overflow-y-auto max-h-[90vh]">
+    <div className="bg-white dark:bg-gray-900 dark:text-white w-full max-w-3xl rounded-2xl p-6 shadow-2xl relative animate-fade-in overflow-y-auto max-h-[90vh]">
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 text-gray-600 hover:bg-gray-200 p-2 rounded-full transition duration-150"
+        className="absolute top-3 right-3 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded-full transition duration-150"
       >
         ✕
       </button>
@@ -32,8 +32,6 @@ const MyApplication = () => {
   const [modal, setModal] = useState({
     details: false,
     edit: false,
-    // Note: Delete modal is not needed as Swal is used for confirmation, but
-    // I'll keep the delete logic for now, though it's not strictly a modal.
     pay: false,
     review: false,
   });
@@ -42,7 +40,9 @@ const MyApplication = () => {
   const [editDegree, setEditDegree] = useState("");
   const [editCategory, setEditCategory] = useState("");
 
-  // ================= FETCH APPLICATIONS =================
+  // Helper function for dark mode detection
+  const isDarkMode = () => document.documentElement.classList.contains("dark");
+
   const {
     data: applications = [],
     isLoading,
@@ -55,7 +55,6 @@ const MyApplication = () => {
       return res.data.data || [];
     },
   });
-  // console.log(applications);
 
   const openModal = (type, app) => {
     setSelectedApp(app);
@@ -68,7 +67,6 @@ const MyApplication = () => {
 
   const closeModal = (type) => setModal((prev) => ({ ...prev, [type]: false }));
 
-  // Moved delete logic to a confirmation function
   const handleDeleteConfirmation = (app) => {
     setSelectedApp(app);
     Swal.fire({
@@ -79,6 +77,9 @@ const MyApplication = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: PRIMARY_COLOR,
       confirmButtonText: "Yes, delete it!",
+      // Dark Mode Alert Support
+      background: isDarkMode() ? "#111827" : "#fff",
+      color: isDarkMode() ? "#fff" : "#000",
     }).then((result) => {
       if (result.isConfirmed) {
         handleDelete(app._id);
@@ -132,6 +133,7 @@ const MyApplication = () => {
       toast.error("Failed to update");
     }
   };
+
   const handleAddReview = async () => {
     if (!reviewText.trim()) {
       toast.error("Review text cannot be empty.");
@@ -149,8 +151,6 @@ const MyApplication = () => {
         rating,
         reviewText,
       });
-      // Optionally update the application status to 'reviewed' or similar if the backend supports it,
-      // but for now, we only post the review.
       toast.success("Review posted 🎉");
       closeModal("review");
       setRating(5);
@@ -163,152 +163,91 @@ const MyApplication = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-6 text-center">
+    <div className="max-w-7xl mx-auto p-4 min-h-screen bg-transparent transition-colors duration-300">
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">
         My <span style={{ color: PRIMARY_COLOR }}>Applications</span>
       </h2>
 
-      {/* ================= TABLE ================= */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+      <div className="overflow-x-auto bg-white dark:bg-gray-900 shadow-md rounded-lg border border-transparent dark:border-gray-800">
         <table className="min-w-full table-auto">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                #
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                University
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                Tracking ID
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                FeedBack
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                Status
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                Payment
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-700">
-                Actions
-              </th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">#</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">University</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">Tracking ID</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">Feedback</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">Status</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">Payment</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {applications.length === 0 ? (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-center py-10 text-gray-400 text-lg"
-                >
+                <td colSpan="7" className="text-center py-10 text-gray-400 dark:text-gray-500 text-lg">
                   No applications yet.
                 </td>
               </tr>
             ) : (
               applications.map((app, index) => (
-                <tr
-                  key={app._id}
-                  className="hover:bg-gray-50 transition duration-150"
-                >
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td className="px-4 py-2">{app.universityName}</td>
-                  <Link to={`/tracking-application/${app.trackingId}`}>
-                    <td className="px-4 py-2 text-blue-600 hover:underline">{app.trackingId}</td>
-                  </Link>
-
-                  <td className="px-4 py-2">
-                    {/* {app.feedback.length === 0 ? "noFeedback" : app.feedback}
-                     */}
+                <tr key={app._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition duration-150">
+                  <td className="px-4 py-4 text-gray-800 dark:text-gray-300">{index + 1}</td>
+                  <td className="px-4 py-4 text-gray-800 dark:text-gray-200">{app.universityName}</td>
+                  <td className="px-4 py-4">
+                    <Link to={`/tracking-application/${app.trackingId}`} className="text-blue-600 dark:text-blue-400 hover:underline">
+                      {app.trackingId}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-4 text-gray-800 dark:text-gray-400">
                     {!app.feedback ? "noFeedback" : app.feedback}
                   </td>
-
-                  <td
-                    className={`px-4 py-2 font-semibold capitalize ${
-                      app.applicationStatus === "pending"
-                        ? "text-yellow-600"
-                        : app.applicationStatus === "cancelled"
-                        ? "text-red-600"
-                        : "text-green-600"
-                    }`}
-                  >
+                  <td className={`px-4 py-4 font-semibold capitalize ${
+                      app.applicationStatus === "pending" ? "text-yellow-600" :
+                      app.applicationStatus === "rejected" ? "text-red-600" : "text-green-600"
+                    }`}>
                     {app.applicationStatus}
                   </td>
-                  <td
-                    className={`px-4 py-2 font-semibold capitalize ${
-                      app.paymentStatus === "unpaid"
-                        ? "text-red-500"
-                        : "text-green-500"
-                    }`}
-                  >
+                  <td className={`px-4 py-4 font-semibold capitalize ${
+                      app.paymentStatus === "unpaid" ? "text-red-500" : "text-green-500"
+                    }`}>
                     {app.paymentStatus}
                   </td>
-                  <td className="px-4 py-2 flex flex-wrap gap-2">
-                    {/* Always show Details */}
-                    <button
-                      className="px-3 py-1 rounded text-white"
-                      style={{ backgroundColor: PRIMARY_COLOR }}
-                      onClick={() => openModal("details", app)}
-                    >
+                  <td className="px-4 py-4 flex flex-wrap gap-2">
+                    <button className="px-3 py-1 rounded text-white" style={{ backgroundColor: PRIMARY_COLOR }} onClick={() => openModal("details", app)}>
                       Details
                     </button>
-
-                    {/* Pending: Edit & Delete */}
                     {app.applicationStatus === "pending" && (
                       <>
-                        <button
-                          className="px-3 py-1 rounded text-white bg-yellow-500 hover:bg-yellow-600"
-                          onClick={() => openModal("edit", app)}
-                        >
+                        <button className="px-3 py-1 rounded text-white bg-yellow-500 hover:bg-yellow-600" onClick={() => openModal("edit", app)}>
                           Edit
                         </button>
-                        <button
-                          className="px-3 py-1 rounded text-white bg-red-500 hover:bg-red-600"
-                          onClick={() => handleDeleteConfirmation(app)} // Using confirmation
-                        >
+                        <button className="px-3 py-1 rounded text-white bg-red-500 hover:bg-red-600" onClick={() => handleDeleteConfirmation(app)}>
                           Delete
                         </button>
                       </>
                     )}
-
-                    {/* Apply Approved: Show Pay button */}
-                    {app.applicationStatus === "approved" &&
-                      app.paymentStatus === "unpaid" && (
-                        <button
-                          className="px-3 py-1 rounded text-white bg-green-500 hover:bg-green-600"
-                          onClick={() => openModal("pay", app)}
-                        >
-                          Pay Now
-                        </button>
-                      )}
-
-                    {/* Apply Cancelled: Show Cancelled/Re-apply info button */}
+                    {app.applicationStatus === "approved" && app.paymentStatus === "unpaid" && (
+                      <button className="px-3 py-1 rounded text-white bg-green-500 hover:bg-green-600" onClick={() => openModal("pay", app)}>
+                        Pay Now
+                      </button>
+                    )}
                     {app.applicationStatus === "rejected" && (
-                      <button
-                        className="px-3 py-1 rounded text-white bg-red-600"
-                        onClick={() =>
-                          Swal.fire({
-                            title: "Application Cancelled",
-                            text: "You can reapply in the application section.",
-                            icon: "info",
-                            confirmButtonText: "Go to Apply",
-                          }).then(() => {
-                            window.location.href = "/scholarships";
-                          })
-                        }
-                      >
+                      <button className="px-3 py-1 rounded text-white bg-red-600" onClick={() => 
+                        Swal.fire({
+                          title: "Application Cancelled",
+                          text: "You can reapply in the application section.",
+                          icon: "info",
+                          confirmButtonText: "Go to Apply",
+                          // Dark Mode Alert Support
+                          background: isDarkMode() ? "#111827" : "#fff",
+                          color: isDarkMode() ? "#fff" : "#000",
+                        }).then(() => { window.location.href = "/scholarships"; })
+                      }>
                         Cancelled
                       </button>
                     )}
-
-                    {/* Completed: Add Review */}
                     {app.applicationStatus === "completed" && (
-                      <button
-                        className="px-3 py-1 rounded text-white"
-                        style={{ backgroundColor: PRIMARY_COLOR }}
-                        onClick={() => openModal("review", app)}
-                      >
+                      <button className="px-3 py-1 rounded text-white" style={{ backgroundColor: PRIMARY_COLOR }} onClick={() => openModal("review", app)}>
                         Add Review
                       </button>
                     )}
@@ -320,80 +259,39 @@ const MyApplication = () => {
         </table>
       </div>
 
-      {/* ================= MODALS (Keep existing modals) ================= */}
+      {/* MODALS */}
       {modal.details && selectedApp && (
         <Modal onClose={() => closeModal("details")}>
-          <h3
-            className="text-xl font-bold mb-4 text-center"
-            style={{ color: PRIMARY_COLOR }}
-          >
+          <h3 className="text-xl font-bold mb-4 text-center" style={{ color: PRIMARY_COLOR }}>
             {selectedApp.scholarshipName}
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg text-gray-700">
-            <p>
-              <strong>University:</strong> {selectedApp.universityName}
-            </p>
-            <p>
-              <strong>Tracking ID:</strong> {selectedApp.trackingId || "N/A"}
-            </p>
-            <p>
-              <strong>Category:</strong> {selectedApp.scholarshipCategory}
-            </p>
-            <p>
-              <strong>Degree:</strong> {selectedApp.degree}
-            </p>
-            <p>
-              <strong>Application Fee:</strong> ${selectedApp.applicationFees}
-            </p>
-            <p>
-              <strong>Service Charge:</strong> ${selectedApp.serviceCharge}
-            </p>
-            <p>
-              <strong>Status:</strong>{" "}
-              <span className="capitalize font-semibold">
-                {selectedApp.applicationStatus}
-              </span>
-            </p>
-            <p>
-              <strong>Payment:</strong>{" "}
-              <span className="capitalize font-semibold">
-                {selectedApp.paymentStatus}
-              </span>
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg text-gray-700 dark:text-gray-300">
+            <p><strong>University:</strong> {selectedApp.universityName}</p>
+            <p><strong>Tracking ID:</strong> {selectedApp.trackingId || "N/A"}</p>
+            <p><strong>Category:</strong> {selectedApp.scholarshipCategory}</p>
+            <p><strong>Degree:</strong> {selectedApp.degree}</p>
+            <p><strong>Application Fee:</strong> ${selectedApp.applicationFees}</p>
+            <p><strong>Service Charge:</strong> ${selectedApp.serviceCharge}</p>
+            <p><strong>Status:</strong> <span className="capitalize font-semibold">{selectedApp.applicationStatus}</span></p>
+            <p><strong>Payment:</strong> <span className="capitalize font-semibold">{selectedApp.paymentStatus}</span></p>
           </div>
         </Modal>
       )}
 
       {modal.edit && selectedApp && (
         <Modal onClose={() => closeModal("edit")}>
-          <h3 className="text-xl font-bold mb-4 text-center text-yellow-600">
-            Edit Application
-          </h3>
+          <h3 className="text-xl font-bold mb-4 text-center text-yellow-600">Edit Application</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col">
-              <label>Degree</label>
-              <input
-                key="edit-degree"
-                value={editDegree}
-                onChange={(e) => setEditDegree(e.target.value)}
-                className="border p-2 rounded focus:ring-2 focus:ring-yellow-500"
-              />
+              <label className="dark:text-gray-300">Degree</label>
+              <input value={editDegree} onChange={(e) => setEditDegree(e.target.value)} className="border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded focus:ring-2 focus:ring-yellow-500" />
             </div>
             <div className="flex flex-col">
-              <label>Category</label>
-              <input
-                key="edit-category"
-                value={editCategory}
-                onChange={(e) => setEditCategory(e.target.value)}
-                className="border p-2 rounded focus:ring-2 focus:ring-yellow-500"
-              />
+              <label className="dark:text-gray-300">Category</label>
+              <input value={editCategory} onChange={(e) => setEditCategory(e.target.value)} className="border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded focus:ring-2 focus:ring-yellow-500" />
             </div>
             <div className="md:col-span-2">
-              <button
-                onClick={handleEdit}
-                className="w-full py-2 rounded text-white"
-                style={{ backgroundColor: PRIMARY_COLOR }}
-              >
+              <button onClick={handleEdit} className="w-full py-2 rounded text-white" style={{ backgroundColor: PRIMARY_COLOR }}>
                 Save Changes
               </button>
             </div>
@@ -401,59 +299,27 @@ const MyApplication = () => {
         </Modal>
       )}
 
-      {modal.pay && selectedApp && (
-        <Modal onClose={() => closeModal("pay")}>
-          <h3 className="text-xl font-bold mb-4 text-center text-green-600">
-            Payment
-          </h3>
-          <p className="text-center mb-4">
-            Total:{" "}
-            <span className="font-bold">
-              ${selectedApp.applicationFees + selectedApp.serviceCharge}
-            </span>
-          </p>
-          <button
-            onClick={handlePayment}
-            className="w-full py-2 text-white rounded"
-            style={{ backgroundColor: PRIMARY_COLOR }}
-          >
-            Pay Now
+      {modal.review && selectedApp && (
+        <Modal onClose={() => closeModal("review")}>
+          <h3 className="text-xl font-bold mb-4 text-center" style={{ color: PRIMARY_COLOR }}>Add Review</h3>
+          <textarea rows="4" className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded mb-3 focus:ring-2 focus:ring-green-500" placeholder="Share your experience..." value={reviewText} onChange={(e) => setReviewText(e.target.value)} />
+          <select className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded mb-3 focus:ring-2 focus:ring-green-500" value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+            {[5, 4, 3, 2, 1].map((r) => <option key={r} value={r}>{r} Stars</option>)}
+          </select>
+          <button onClick={handleAddReview} className="w-full py-2 rounded text-white" style={{ backgroundColor: PRIMARY_COLOR }}>
+            Submit Review
           </button>
         </Modal>
       )}
-
-      {modal.review && selectedApp && (
-        <Modal onClose={() => closeModal("review")}>
-          <h3
-            className="text-xl font-bold mb-4 text-center"
-            style={{ color: PRIMARY_COLOR }}
-          >
-            Add Review
-          </h3>
-          <textarea
-            rows="4"
-            className="w-full border p-2 rounded mb-3 focus:ring-2 focus:ring-green-500"
-            placeholder="Share your experience..."
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-          />
-          <select
-            className="w-full border p-2 rounded mb-3 focus:ring-2 focus:ring-green-500"
-            value={rating}
-            onChange={(e) => setRating(Number(e.target.value))}
-          >
-            {[5, 4, 3, 2, 1].map((r) => (
-              <option key={r} value={r}>
-                {r} {r > 1 ? "Stars" : "Star"}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={handleAddReview}
-            className="w-full py-2 rounded text-white"
-            style={{ backgroundColor: PRIMARY_COLOR }}
-          >
-            Submit Review
+      
+      {modal.pay && selectedApp && (
+        <Modal onClose={() => closeModal("pay")}>
+          <h3 className="text-xl font-bold mb-4 text-center text-green-600">Payment</h3>
+          <p className="text-center mb-4 dark:text-gray-300">
+            Total: <span className="font-bold">${selectedApp.applicationFees + selectedApp.serviceCharge}</span>
+          </p>
+          <button onClick={handlePayment} className="w-full py-2 text-white rounded" style={{ backgroundColor: PRIMARY_COLOR }}>
+            Pay Now
           </button>
         </Modal>
       )}

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// axios is imported, but we'll use axiosSecure
 import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -10,27 +9,17 @@ import {
   Tooltip,
   Legend,
   ArcElement,
+  PointElement,
 } from "chart.js";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { FiUsers, FiDollarSign, FiAward, FiPieChart, FiBarChart2 } from "react-icons/fi";
 
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement);
 
-// Define the primary color (assuming Tailwind is configured with 'primary: #35AC86')
-const PRIMARY_COLOR = "#35AC86"; 
-const PRIMARY_COLOR_LIGHT = "rgba(53, 172, 134, 0.5)"; // Lighter/transparent version for charts
+const PRIMARY_COLOR = "#35AC86";
 
 const AdminDashboardHome = () => {
   const axiosSecure = useAxiosSecure();
-
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalFees: 0,
@@ -41,165 +30,172 @@ const AdminDashboardHome = () => {
 
   const fetchStats = async () => {
     try {
-      // Fetching logic using axiosSecure (as previously fixed)
+      const [usersRes, scholarshipsRes, applicationsRes] = await Promise.all([
+        axiosSecure.get("/users"),
+        axiosSecure.get("/scholarshipUniversity"),
+        axiosSecure.get("/application")
+      ]);
 
-      // 1. Get users
-      const usersRes = await axiosSecure.get("/users");
-      const users = Array.isArray(usersRes.data?.data) ? usersRes.data.data : usersRes.data;
-      const totalUsers = Array.isArray(users) ? users.length : 0;
-
-      // 2. Get scholarships
-      const scholarshipsRes = await axiosSecure.get("/scholarshipUniversity"); 
-      const totalScholarships = Array.isArray(scholarshipsRes.data)
-        ? scholarshipsRes.data.length
-        : 0;
-
-      // 3. Get applications
-      const applicationsRes = await axiosSecure.get("/application");
-      const applications = Array.isArray(applicationsRes.data?.data)
-        ? applicationsRes.data.data
-        : [];
+      const users = usersRes.data?.data || usersRes.data || [];
+      const scholarships = scholarshipsRes.data || [];
+      const applications = applicationsRes.data?.data || [];
 
       let totalFees = 0;
-      const applicationsByUniversityMap = {};
-      const applicationsByCategoryMap = {};
+      const universityMap = {};
+      const categoryMap = {};
 
       applications.forEach((app) => {
         totalFees += (Number(app.applicationFees) || 0) + (Number(app.serviceCharge) || 0);
-
-        applicationsByUniversityMap[app.universityName] =
-          (applicationsByUniversityMap[app.universityName] || 0) + 1;
-
-        applicationsByCategoryMap[app.scholarshipCategory] =
-          (applicationsByCategoryMap[app.scholarshipCategory] || 0) + 1;
+        universityMap[app.universityName] = (universityMap[app.universityName] || 0) + 1;
+        categoryMap[app.scholarshipCategory] = (categoryMap[app.scholarshipCategory] || 0) + 1;
       });
 
       setStats({
-        totalUsers,
+        totalUsers: users.length,
         totalFees,
-        totalScholarships,
-        applicationsByUniversity: applicationsByUniversityMap,
-        applicationsByCategory: applicationsByCategoryMap,
+        totalScholarships: scholarships.length,
+        applicationsByUniversity: universityMap,
+        applicationsByCategory: categoryMap
       });
     } catch (error) {
-      console.error("Error fetching dashboard data:", error);
+      console.error("Dashboard error:", error);
     }
   };
 
-  useEffect(() => {
-    fetchStats();
-  }, [axiosSecure]);
+  useEffect(() => { fetchStats(); }, [axiosSecure]);
 
-  // Prepare data for charts
-  const universityLabels = Object.keys(stats.applicationsByUniversity);
-  const universityCounts = Object.values(stats.applicationsByUniversity);
+  const isDark = document.documentElement.classList.contains('dark');
 
-  const categoryLabels = Object.keys(stats.applicationsByCategory);
-  const categoryCounts = Object.values(stats.applicationsByCategory);
-  
-  // Custom colors for Pie chart for visual distinction
-  const pieChartColors = [
-    PRIMARY_COLOR_LIGHT, // Primary color light
-    "rgba(255, 159, 64, 0.5)", // Orange
-    "rgba(153, 102, 255, 0.5)", // Purple
-    "rgba(54, 162, 235, 0.5)", // Blue
-    "rgba(201, 203, 207, 0.5)", // Gray
-  ];
+  // Modern Chart Options
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        align: 'end',
+        labels: {
+          color: isDark ? '#9CA3AF' : '#6B7280',
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 20,
+          font: { size: 12, weight: '600' }
+        }
+      },
+      tooltip: {
+        backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
+        titleColor: isDark ? '#F3F4F6' : '#111827',
+        bodyColor: isDark ? '#D1D5DB' : '#374151',
+        borderColor: isDark ? '#374151' : '#E5E7EB',
+        borderWidth: 1,
+        padding: 12,
+        boxPadding: 6,
+        cornerRadius: 8,
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { color: isDark ? '#6B7280' : '#9CA3AF', font: { size: 11 } },
+        grid: { color: isDark ? 'rgba(75, 85, 99, 0.1)' : 'rgba(0,0,0,0.05)', drawBorder: false }
+      },
+      x: {
+        ticks: { color: isDark ? '#6B7280' : '#9CA3AF', font: { size: 11 } },
+        grid: { display: false }
+      }
+    }
+  };
 
-  // ===================================
-  //            MODERN LAYOUT
-  // ===================================
-
-  const StatCard = ({ title, value, color }) => (
-    <div 
-      className={`bg-white rounded-xl shadow-lg p-6 flex flex-col justify-center items-center transition-all duration-300 hover:shadow-xl border-t-4 border-${color} min-h-[140px]`}
-    >
-      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">{title}</h2>
-      <p className={`text-4xl font-extrabold text-${color}`}>{value}</p>
+  const StatCard = ({ title, value, icon: Icon, gradient }) => (
+    <div className={`relative overflow-hidden bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group`}>
+      <div className={`absolute -right-4 -top-4 w-24 h-24 rounded-full opacity-10 group-hover:scale-150 transition-transform duration-700 ${gradient}`}></div>
+      <div className="flex items-center gap-5">
+        <div className={`p-4 rounded-2xl ${gradient} text-white shadow-lg`}>
+          <Icon size={24} />
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{title}</p>
+          <h2 className="text-3xl font-black text-gray-800 dark:text-white mt-1">{value}</h2>
+        </div>
+      </div>
     </div>
   );
 
   return (
-    <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8 border-b pb-2 text-center">Admin <span className="text-primary">Overview</span></h1>
-
-      {/* Stat Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <StatCard title="Total Users" value={stats.totalUsers} color="primary" />
-        
-        {/* Adjusted to display currency properly */}
-        <StatCard 
-          title="Total Fees Collected" 
-          value={`$${stats.totalFees.toFixed(2)}`} 
-          color="green-600" 
-        />
-        
-        <StatCard title="Total Scholarships" value={stats.totalScholarships} color="indigo-600" />
+    <div className="p-6 md:p-10 bg-[#F9FAFB] dark:bg-[#030712] min-h-screen">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+        <div>
+          <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+            Dashboard <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400">Analytics</span>
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 font-medium">Monitoring university scholarship trends and user activity.</p>
+        </div>
+        <button 
+           onClick={fetchStats}
+           className="px-5 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 shadow-sm transition-all active:scale-95">
+          Refresh Data
+        </button>
       </div>
-      
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        {/* Bar Chart: Applications per University */}
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-          <h3 className="text-xl font-semibold text-gray-700 mb-4">Applications per University</h3>
-          <div className="h-96">
+      {/* Premium Stat Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <StatCard title="Total Users" value={stats.totalUsers} icon={FiUsers} gradient="bg-gradient-to-br from-blue-500 to-indigo-600" />
+        <StatCard title="Revenue" value={`$${stats.totalFees.toLocaleString()}`} icon={FiDollarSign} gradient="bg-gradient-to-br from-emerald-400 to-teal-600" />
+        <StatCard title="Scholarships" value={stats.totalScholarships} icon={FiAward} gradient="bg-gradient-to-br from-amber-400 to-orange-600" />
+      </div>
+
+      {/* Main Charts Area */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Bar Chart - 3 Columns wide */}
+        <div className="lg:col-span-3 bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <div className="flex items-center gap-2 mb-8">
+            <FiBarChart2 className="text-emerald-500" />
+            <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">Distribution by University</h3>
+          </div>
+          <div className="h-[350px]">
             <Bar
               data={{
-                labels: universityLabels,
-                datasets: [
-                  {
-                    label: "Applications Count",
-                    data: universityCounts,
-                    // Apply primary color
-                    backgroundColor: PRIMARY_COLOR_LIGHT, 
-                    borderColor: PRIMARY_COLOR,
-                    borderWidth: 1,
-                    borderRadius: 4,
-                  },
-                ],
+                labels: Object.keys(stats.applicationsByUniversity),
+                datasets: [{ 
+                  label: "Applications", 
+                  data: Object.values(stats.applicationsByUniversity), 
+                  backgroundColor: 'rgba(53, 172, 134, 0.85)', 
+                  hoverBackgroundColor: PRIMARY_COLOR,
+                  borderRadius: 12,
+                  barThickness: 28,
+                }]
               }}
-              options={{ 
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { mode: 'index' }
-                },
-                scales: {
-                    y: { beginAtZero: true }
-                }
-              }}
+              options={chartOptions}
             />
           </div>
         </div>
 
-        {/* Pie Chart: Applications per Category */}
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-          <h3 className="text-xl font-semibold text-gray-700 mb-4">Applications per Category</h3>
-          <div className="flex justify-center items-center h-96">
+        {/* Pie Chart - 2 Columns wide */}
+        <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <div className="flex items-center gap-2 mb-8">
+            <FiPieChart className="text-amber-500" />
+            <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">Scholarship Categories</h3>
+          </div>
+          <div className="h-[350px] relative">
             <Pie
               data={{
-                labels: categoryLabels,
-                datasets: [
-                  {
-                    label: "Applications",
-                    data: categoryCounts,
-                    // Use custom color array based on primary color
-                    backgroundColor: pieChartColors, 
-                    borderColor: '#ffffff',
-                    borderWidth: 2,
-                  },
-                ],
+                labels: Object.keys(stats.applicationsByCategory),
+                datasets: [{ 
+                    data: Object.values(stats.applicationsByCategory), 
+                    backgroundColor: [PRIMARY_COLOR, "#6366F1", "#F59E0B", "#EF4444", "#8B5CF6"], 
+                    borderWidth: 4,
+                    borderColor: isDark ? "#111827" : "#FFFFFF",
+                    hoverOffset: 15
+                }]
               }}
               options={{ 
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'right', labels: { boxWidth: 15 } },
-                    tooltip: { mode: 'index' }
-                }
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { position: 'bottom', labels: { color: isDark ? '#9CA3AF' : '#4B5563', padding: 25, font: { size: 12, weight: '600' }, usePointStyle: true } } 
+                } 
               }}
             />
           </div>
