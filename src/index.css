@@ -1,23 +1,45 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-   themes: light --default;
+   themes: light --default, dark;
 };
 
+/* Light Theme Customization */
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
   --color-primary: #35AC86;
   --color-secondary: #03373D;
+  --color-base-100: #ffffff;
 }
 
+/* Dark Theme Customization */
+@plugin "daisyui/theme" {
+  name: "dark";
+  --color-primary: #35AC86;
+  --color-secondary: #03373D;
+  --color-base-100: #1d232a; /* DaisyUI dark base color */
+  --color-base-content: #eeeeee;
+}
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Custom Classes */
 .input-field {
   @apply w-full border border-gray-300 bg-white p-3 rounded-xl focus:ring-2 
-         focus:ring-[#35AC86] focus:border-[#35AC86] outline-none transition;
+         focus:ring-[#35AC86] focus:border-[#35AC86] outline-none transition
+         dark:bg-gray-800 dark:border-gray-700 dark:text-white;
 }
+
 .text-primary {
   color: #35AC86;
 }
+
 .bg-primary {
   background-color: #35AC86;
+}
+
+/* Glassmorphism adjustment for Dark Mode */
+.nav-glass {
+  @apply backdrop-blur-md bg-white/70 border-b border-gray-200 sticky top-0 z-50 transition-colors
+         dark:bg-slate-900/70 dark:border-gray-800;
 }

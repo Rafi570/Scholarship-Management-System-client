@@ -22,9 +22,9 @@ const Forgot = () => {
     setLoading(true);
     try {
       await resetPassword(email);
-      toast.success("Password reset email sent! Check your inbox/spam.");
+      toast.success("Password reset email sent! Check your inbox.");
       setEmail("");
-      // অপশনাল: ৩ সেকেন্ড পর লগইন পেজে রিডাইরেক্ট
+      // ৩ সেকেন্ড পর লগইন পেজে রিডাইরেক্ট
       setTimeout(() => navigate("/auth/login"), 3000);
     } catch (error) {
       console.error(error);
@@ -45,10 +45,10 @@ const Forgot = () => {
       {/* Header */}
       <div className="flex flex-wrap justify-between gap-3 pb-6">
         <div className="flex w-full flex-col gap-2">
-          <p className="text-gray-900 text-3xl font-black leading-tight tracking-[-0.033em]">
+          <p className="text-gray-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">
             Forgot Password?
           </p>
-          <p className="text-gray-500 text-base font-normal leading-normal">
+          <p className="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">
             No worries! Enter your email and we’ll send you a password reset
             link.
           </p>
@@ -59,14 +59,14 @@ const Forgot = () => {
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {/* Email Field */}
         <label className="flex flex-col w-full">
-          <p className="text-gray-900 text-base font-medium pb-2">
+          <p className="text-gray-900 dark:text-gray-200 text-base font-medium pb-2">
             Email Address
           </p>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="form-input w-full rounded-lg text-gray-900 border border-gray-200 bg-white h-14 p-[15px] text-base placeholder:text-gray-500 focus:border-primary outline-none"
+            className="w-full rounded-lg text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 p-[15px] text-base placeholder:text-gray-500 focus:border-primary outline-none transition-colors"
             placeholder="Enter your email"
             required
             disabled={loading}
@@ -77,11 +77,11 @@ const Forgot = () => {
         <button
           type="submit"
           disabled={loading}
-          className={
-            loading
-              ? "flex items-center justify-center p-4 text-base font-semibold text-white/70 bg-primary/70 rounded-lg h-14 cursor-not-allowed"
-              : "flex items-center justify-center p-4 text-base font-semibold text-white bg-primary rounded-lg shadow-sm hover:bg-primary/90 h-14"
-          }
+          className={`flex items-center justify-center p-4 text-base font-semibold text-white rounded-lg h-14 transition-all duration-300 ${
+            loading 
+              ? "bg-primary/70 cursor-not-allowed" 
+              : "bg-primary shadow-sm hover:bg-primary/90"
+          }`}
         >
           {loading ? (
             <>
@@ -114,11 +114,11 @@ const Forgot = () => {
       </form>
 
       {/* Back to Login */}
-      <p className="text-center text-gray-500 text-sm font-normal pt-6">
+      <p className="text-center text-gray-500 dark:text-gray-400 text-sm font-normal pt-6">
         Remember your password?{" "}
         <Link
           to="/auth/login"
-          className="font-semibold text-primary underline hover:text-primary/80"
+          className="font-semibold text-primary underline hover:text-primary/80 transition-colors"
         >
           Back to Log In
         </Link>

@@ -1,82 +1,72 @@
 import React from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#101922] text-gray-300 py-10 px-4 md:px-20">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6">
-        {/* Logo & Description */}
-        <div className="flex flex-col gap-2">
-          <h2 className="text-xl">
-            Scholarship<span className="text-primary font-bold">Finder</span>
-          </h2>
-          <p className="text-sm md:w-64">
-            Your one-stop platform to explore and apply for scholarships
-            worldwide.
+    <footer className="bg-slate-900 dark:bg-black text-gray-300 py-12 px-6 transition-colors duration-300 border-t border-gray-800">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          
+          {/* 1. Logo & Description */}
+          <div className="flex flex-col gap-4">
+            <Link to="/" className="text-2xl font-bold tracking-tight flex items-center gap-1">
+              <span className="text-white">Scholarship</span>
+              <span className="text-primary">Finder</span>
+            </Link>
+            <p className="text-sm leading-relaxed text-gray-400 max-w-xs">
+              Your one-stop platform to explore and apply for scholarships
+              worldwide. We help students achieve their academic dreams.
+            </p>
+          </div>
+
+          {/* 2. Quick Links */}
+          <div className="flex flex-col gap-4">
+            <h3 className="font-bold text-white uppercase tracking-wider text-sm">Resources</h3>
+            <ul className="flex flex-col gap-2">
+              <li><Link to="/" className="hover:text-primary transition-colors text-sm">Home</Link></li>
+              <li><Link to="/scholarships" className="hover:text-primary transition-colors text-sm">All Scholarships</Link></li>
+              <li><Link to="/blog" className="hover:text-primary transition-colors text-sm">Latest Blogs</Link></li>
+            </ul>
+          </div>
+
+          {/* 3. Support & Policies */}
+          <div className="flex flex-col gap-4">
+            <h3 className="font-bold text-white uppercase tracking-wider text-sm">Support</h3>
+            <ul className="flex flex-col gap-2">
+              <li><Link to="/contact" className="hover:text-primary transition-colors text-sm">Contact Us</Link></li>
+              <li><Link to="/faq" className="hover:text-primary transition-colors text-sm">FAQ</Link></li>
+              <li><Link to="/privacy" className="hover:text-primary transition-colors text-sm">Privacy Policy</Link></li>
+            </ul>
+          </div>
+
+          {/* 4. Social & Newsletter */}
+          <div className="flex flex-col gap-4">
+            <h3 className="font-bold text-white uppercase tracking-wider text-sm">Follow Us</h3>
+            <div className="flex gap-4 text-xl">
+              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-md" aria-label="Facebook">
+                <FaFacebookF size={18} />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-md" aria-label="Twitter">
+                <FaTwitter size={18} />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-md" aria-label="LinkedIn">
+                <FaLinkedinIn size={18} />
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Divider & Copyright */}
+        <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+          <p className="text-sm text-gray-500">
+            &copy; {new Date().getFullYear()} <span className="text-gray-400 font-semibold">ScholarshipFinder</span>. All rights reserved.
+          </p>
+          <p className="text-xs text-gray-600 uppercase tracking-widest">
+            Built for a better future
           </p>
         </div>
-
-        {/* Navigation Links */}
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex flex-col gap-2">
-            <h3 className="font-semibold text-white">Resources</h3>
-            <a href="#" className="hover:text-primary transition-colors">
-              Home
-            </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              All Scholarships
-            </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              Dashboard
-            </a>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="font-semibold text-white">Support</h3>
-            <a href="#" className="hover:text-primary transition-colors">
-              Contact Us
-            </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              FAQ
-            </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              Privacy Policy
-            </a>
-          </div>
-        </div>
-
-        {/* Social Links with Icons */}
-        <div className="flex flex-col gap-2">
-          <h3 className="font-semibold text-white">Follow Us</h3>
-          <div className="flex gap-4 mt-1 text-xl">
-            <a
-              href="#"
-              className="hover:text-primary transition-colors"
-              aria-label="Facebook"
-            >
-              <FaFacebookF />
-            </a>
-            <a
-              href="#"
-              className="hover:text-primary transition-colors"
-              aria-label="Twitter"
-            >
-              <FaTwitter />
-            </a>
-            <a
-              href="#"
-              className="hover:text-primary transition-colors"
-              aria-label="LinkedIn"
-            >
-              <FaLinkedinIn />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Copyright */}
-      <div className="text-center text-sm text-gray-500 mt-8">
-        &copy; {new Date().getFullYear()} ScholarshipFinder. All rights
-        reserved.
       </div>
     </footer>
   );
