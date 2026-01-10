@@ -22,52 +22,52 @@ const blogs = [
       "Discover which countries are providing the most scholarship opportunities this year.",
     date: "Dec 28, 2025",
   },
-//   {
-//     id: 4,
-//     title: "Tips for Writing Winning Scholarship Essays",
-//     excerpt:
-//       "A complete guide to crafting scholarship essays that impress the selection committee.",
-//     date: "Dec 20, 2025",
-//   },
 ];
 
 const Blog = () => {
   return (
-    <section className="text-gray-800 min-h-screen">
+    <section className="bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-100 min-h-screen transition-colors duration-300">
       {/* Header */}
-      <div className="max-w-7xl mx-auto px-6 py-16 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold" style={{ color: "#35AC86" }}>
-          <span className="text-black">Scholarship</span> Blog
+      <div className="max-w-7xl mx-auto px-6 py-20 text-center">
+        <h1 className="text-4xl sm:text-5xl font-black tracking-tight">
+          <span className="text-black dark:text-white">Scholarship</span>{" "}
+          <span className="text-primary">Blog</span>
         </h1>
-        <p className="mt-4 text-gray-600 text-lg sm:text-xl">
-          Latest updates, guides, and tips from our Scholarship Management System
+        <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto font-medium">
+          Expert guides and the latest scholarship insights.
         </p>
       </div>
 
       {/* Blog List */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 pb-16">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 pb-24">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {blogs.map((blog) => (
             <div
               key={blog.id}
               className="
-                bg-white 
+                group
+                bg-gray-50 dark:bg-gray-900 
                 border-l-4 border-primary
-                rounded-xl
-                p-6
-                shadow-md
-                transition-transform duration-300
-                hover:-translate-y-2 hover:shadow-xl
+                rounded-2xl
+                p-8
+                shadow-sm
+                border border-gray-100 dark:border-gray-800
+                transition-all duration-300
+                hover:shadow-xl hover:-translate-y-1
               "
-              style={{ borderColor: "#35AC86" }}
             >
-              <p className="text-sm text-gray-500">{blog.date}</p>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+                  {blog.date}
+                </p>
+                <div className="h-2 w-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </div>
 
-              <h2 className="mt-3 text-xl font-bold text-gray-800 relative after:absolute after:left-0 after:bottom-0 after:w-12 after:h-1 after:bg-primary after:rounded-full">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-snug group-hover:text-primary transition-colors">
                 {blog.title}
               </h2>
 
-              <p className="mt-3 text-gray-600 text-sm leading-relaxed">
+              <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                 {blog.excerpt}
               </p>
             </div>

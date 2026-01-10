@@ -44,7 +44,8 @@ export const router = createBrowserRouter([
         path: "/scholarship/:id",
         element: (
 
-            <DetailsUniverScholarship></DetailsUniverScholarship>
+          <PrivateRoute><DetailsUniverScholarship></DetailsUniverScholarship></PrivateRoute>
+            
 
         ),
         loader: ({ params }) =>
