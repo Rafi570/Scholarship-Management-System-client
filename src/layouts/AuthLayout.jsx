@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router";
 
 const AuthLayout = () => {
@@ -9,15 +9,20 @@ const AuthLayout = () => {
     "Diverse group of students smiling and collaborating in a bright, modern library setting.";
 
   const bannerTitle = "";
+    useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.querySelector("html").setAttribute("data-theme", savedTheme);
+  }, []);
+
 
   return (
     // Background color added for dark mode
-    <div className="relative flex min-h-screen w-full flex-col bg-white dark:bg-gray-950 overflow-x-hidden mb-20 transition-colors duration-300">
+    <div className="relative flex min-h-screen w-full flex-col bg-white dark:bg-gray-950 overflow-x-hidden transition-colors duration-300">
       <div className="flex flex-1 justify-center">
         <div className="flex flex-col w-full">
           <div className="w-full">
             <div
-              className="bg-cover bg-center flex flex-col justify-end min-h-[350px] md:min-h-[400px]"
+              className="bg-cover bg-center flex flex-col justify-end min-h-[200px] md:min-h-[300px]"
               data-alt={bannerAltText}
               style={{
                 backgroundImage: `
