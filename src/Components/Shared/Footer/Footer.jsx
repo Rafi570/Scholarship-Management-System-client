@@ -39,9 +39,9 @@ const Footer = () => {
           <div className="flex flex-col gap-4">
             <h3 className="font-bold text-white uppercase tracking-wider text-sm">Support</h3>
             <ul className="flex flex-col gap-2">
-              <li><Link to="/contact" className="hover:text-primary transition-colors text-sm">Contact Us</Link></li>
-              <li><Link to="/faq" className="hover:text-primary transition-colors text-sm">FAQ</Link></li>
-              <li><Link to="/privacy" className="hover:text-primary transition-colors text-sm">Privacy Policy</Link></li>
+              <li><Link to="/#" className="hover:text-primary transition-colors text-sm">Contact Us</Link></li>
+              <li><Link to="/#" className="hover:text-primary transition-colors text-sm">FAQ</Link></li>
+              <li><Link to="/#" className="hover:text-primary transition-colors text-sm">Privacy Policy</Link></li>
             </ul>
           </div>
 
